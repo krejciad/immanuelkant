@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="symb/spst_logo.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <title>Casino Test</title>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <img src="symb/spst_logo.ico" alt="Logo" class="nav-logo">
+            <span class="nav_name">CASINO TEST</span>
+        </div>
+        <div class="user-info">
+            <span id="userDisplay">...</span>
+            <span class="balance">Body: <span id="balance">0</span></span>
+        </div>
+    </nav>
+
+    <div class="game-container">
+        
+        <div class="test-area" id="testArea">
+            <div id="questionContainer">
+                <div class="question-text">Načítám otázku...</div>
+                <div class="options" id="optionsContainer">
+                </div>
+            </div>
+            
+            <div id="spinResultArea" style="display: none;">
+                <div id="resultHeadline" style="font-size: 1.5em; color: green; margin-bottom: 10px;"></div>
+                <div id="resultDetail" style="font-size: 1.1em; color: var(--text-color);"></div>
+            </div>
+        </div>
+        <div class="free-spins">Zbývá volných zatočení: <span id="freeSpinsCount">0</span></div>
+
+        <div class="reels-container" id="reelsContainer" onclick="activate()">
+            <div class="reel" id="reel1">
+                <div class="reel-strip" id="strip1"></div>
+            </div>
+            <div class="reel" id="reel2">
+                <div class="reel-strip" id="strip2"></div>
+            </div>
+            <div class="reel" id="reel3">
+                <div class="reel-strip" id="strip3"></div>
+            </div>
+        </div>
+        
+        <div class="instructions" id="instructions">Odpověz na otázku.</div>
+    </div>
+
+</body>
+<script src="game.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</html>

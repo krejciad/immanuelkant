@@ -1,0 +1,48 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "text": "Který z následujících programovacích jazyků se nejčastěji používá pro strukturování webového obsahu?",
+      "options": {
+        "A": "CSS",
+        "B": "HTML",
+        "C": "JavaScript",
+        "D": "PHP"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 2,
+      "text": "Jaká zkratka se používá pro globálně unikátní identifikátor?",
+      "options": {
+        "A": "GUI",
+        "B": "URL",
+        "C": "UUID",
+        "D": "XML"
+      },
+      "correct": "C"
+    },
+    {
+      "id": 3,
+      "text": "Které číslo je binárně reprezentováno jako 1010?",
+      "options": {
+        "A": "8",
+        "B": "10",
+        "C": "12",
+        "D": "16"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 4,
+      "text": "Co je to 'Hall' v kontextu počítačových sítí?",
+      "options": {
+        "A": "Síťový přepínač",
+        "B": "Internetový protokol",
+        "C": "Hala pro servery (datové centrum)",
+        "D": "Doména nejvyšší úrovně"
+      },
+      "correct": "C"
+    }
+  ]
+}
