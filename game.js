@@ -9,12 +9,14 @@ let currentReel = 0;
 let nextCombination = [];
 let spinDirection = -1; 
 let userId = localStorage.getItem('userId');
+let speed = 0; // FIX: Inicializace proměnné speed
 
 let balance = 0; 
 let freeSpins = 0;
 const SYMBOL_HEIGHT = 70; 
+const QUESTIONS_PER_TEST = 5; // FIX: Přidána konstanta
 
-// FIX: Symboly musí být v podsložce 'symb'
+// Symboly musí být v podsložce 'symb'
 const symbols = [
     'symb/icons8-money-50.png',
     'symb/icons8-star-50.png', 	
@@ -37,7 +39,6 @@ const spinResultArea = document.getElementById('spinResultArea');
 const resultHeadline = document.getElementById('resultHeadline');
 const resultDetail = document.getElementById('resultDetail');
 
-
 // --- Inicializace ---
 document.addEventListener('DOMContentLoaded', () => {
     const startForm = document.getElementById('startForm');
@@ -51,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function createSymbols() {
-    // FIX: Zajištění správné cesty k symbolům a správné výšky
     reelStrips.forEach(strip => {
         strip.innerHTML = ''; 
         for (let i = 0; i < 4; i++) { 
@@ -70,6 +70,40 @@ function initializePositions() {
         strip.style.top = '0px';
         strip.style.transition = 'none';
     });
+}
+
+// FIX: Přidána chybějící funkce handleStartGame
+async function handleStartGame(e) {
+    e.preventDefault();
+    const usernameInput = document.getElementById('usernameInput');
+    const errorMessage = document.getElementById('errorMessage');
+    const username = usernameInput.value.trim();
+    
+    if (!username) {
+        errorMessage.textContent = 'Prosím zadejte jméno.';
+        return;
+    }
+    
+    errorMessage.textContent = 'Načítám...';
+    
+    try {
+        const response = await fetch('api.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'start_game', username })
+        });
+        const data = await response.json();
+        
+        if (data.success && data.user) {
+            localStorage.setItem('userId', data.user.id);
+            window.location.href = 'test.html';
+        } else {
+            errorMessage.textContent = data.error || 'Chyba při startu hry.';
+        }
+    } catch (error) {
+        errorMessage.textContent = 'Chyba komunikace se serverem.';
+        console.error('Start game error:', error);
+    }
 }
 
 // --- Logika Testu (test.html) ---
@@ -106,16 +140,22 @@ async function loadGameState() {
         }
     } catch (error) {
         userDisplayElement.textContent = 'Chyba komunikace.';
+        console.error('Load game state error:', error);
     }
 }
 
 function updateUI() {
-    userDisplayElement.textContent = currentUser;
-    balanceElement.textContent = balance;
-    freeSpinsCountElement.textContent = freeSpins;
+    if (userDisplayElement) userDisplayElement.textContent = currentUser;
+    if (balanceElement) balanceElement.textContent = balance;
+    if (freeSpinsCountElement) freeSpinsCountElement.textContent = freeSpins;
     
-    reelsContainer.style.cursor = canSpin ? 'pointer' : 'not-allowed';
-    instructionsElement.textContent = isSpinning ? 'Klikněte pro zastavení válců.' : (canSpin ? 'Správně! Klikněte (nebo mezerník) pro točení!' : 'Odpověz na otázku.');
+    if (reelsContainer) {
+        reelsContainer.style.cursor = canSpin ? 'pointer' : 'not-allowed';
+    }
+    
+    if (instructionsElement) {
+        instructionsElement.textContent = isSpinning ? 'Klikněte pro zastavení válců.' : (canSpin ? 'Správně! Klikněte (nebo mezerník) pro točení!' : 'Odpověz na otázku.');
+    }
 }
 
 function displayQuestion(data) {
@@ -125,7 +165,6 @@ function displayQuestion(data) {
     questionContainer.style.display = 'block';
 
     if (q.text === 'TEST DOKONČEN!') {
-        // PŘESMĚROVÁNÍ PO DOKONČENÍ TESTU
         instructionsElement.textContent = 'Test dokončen, přesměrování na výsledkovou tabuli...';
         setTimeout(() => window.location.href = 'leaderboard.html', 2000);
         return;
@@ -140,7 +179,10 @@ function displayQuestion(data) {
     }
 
     currentQuestionId = q.id;
-    questionContainer.querySelector('.question-text').innerHTML = `Otázka ${data.questionIndex + 1}/${data.maxQuestions}: ${q.text}`;
+    const questionTextElement = questionContainer.querySelector('.question-text');
+    if (questionTextElement) {
+        questionTextElement.innerHTML = `Otázka ${data.questionIndex + 1}/${data.maxQuestions}: ${escapeHtml(q.text)}`;
+    }
 
     for (const key in q.options) {
         const button = document.createElement('button');
@@ -149,6 +191,13 @@ function displayQuestion(data) {
         button.onclick = () => submitAnswer(key);
         optionsContainer.appendChild(button);
     }
+}
+
+// FIX: Přidána funkce pro escapování HTML (XSS prevence)
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 async function submitAnswer(answer) {
@@ -183,25 +232,119 @@ async function submitAnswer(answer) {
                 if (balance > 0) {
                     setTimeout(loadGameState, 2500); 
                 } else {
-                    // Game Over
                     setTimeout(loadGameState, 500); 
                 }
             }
         }
     } catch (error) {
-        // V případě chyby zobrazit možnosti znovu a zprávu
         resultHeadline.style.color = 'red';
         resultHeadline.textContent = 'CHYBA';
         resultDetail.textContent = 'Komunikační chyba. Zkuste znovu.';
         optionsContainer.style.display = 'block';
         spinResultArea.style.display = 'none';
+        console.error('Submit answer error:', error);
     }
 }
 
-// --- Logika Automatu (FIXED SPINNING) ---
+// --- Logika Automatu ---
 
 const spinSpeed = 20; 
 const decelerationDuration = 1500; 
+
+// FIX: Přidána chybějící funkce generateCombination
+function generateCombination() {
+    const combination = [];
+    for (let i = 0; i < 3; i++) {
+        combination.push(Math.floor(Math.random() * symbols.length));
+    }
+    return combination;
+}
+
+// FIX: Přidána chybějící funkce calculateWin
+function calculateWin(combination) {
+    const [a, b, c] = combination;
+    
+    // Kontrola všech tří stejných symbolů
+    if (a === b && b === c) {
+        const symbolIndex = a;
+        let win = 0;
+        let addFreeSpins = 0;
+        let message = '';
+        
+        switch(symbolIndex) {
+            case 0: // Money
+                win = 5;
+                message = 'Tři peníze! +5 bodů!';
+                break;
+            case 1: // Star
+                win = 3;
+                addFreeSpins = 1;
+                message = 'Tři hvězdy! +3 body a +1 volné zatočení!';
+                break;
+            case 2: // Cherry
+                win = 2;
+                message = 'Tři třešně! +2 body!';
+                break;
+            case 3: // Plum
+                win = 2;
+                message = 'Tři švestky! +2 body!';
+                break;
+            case 4: // Grapes
+                win = 2;
+                message = 'Tři hrozny! +2 body!';
+                break;
+            case 5: // Roulette
+                win = 4;
+                message = 'Tři rulety! +4 body!';
+                break;
+        }
+        
+        return { win, addFreeSpins, message };
+    }
+    
+    // Kontrola dvou stejných
+    if (a === b || b === c || a === c) {
+        return { win: 1, addFreeSpins: 0, message: 'Dva stejné symboly! +1 bod!' };
+    }
+    
+    // Žádná výhra
+    return { win: 0, addFreeSpins: 0, message: 'Bohužel žádná výhra. Zkus to znovu!' };
+}
+
+// FIX: Přidána chybějící funkce saveSpinResult
+async function saveSpinResult(points, addFreeSpins) {
+    try {
+        const response = await fetch('api.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                action: 'save_spin_result', 
+                userId, 
+                points, 
+                freeSpinsAdd: addFreeSpins 
+            })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            balance = data.newScore;
+            freeSpins += addFreeSpins;
+            updateUI();
+            
+            // Čekání před načtením další otázky
+            setTimeout(() => {
+                loadGameState();
+            }, 3000);
+        } else {
+            resultHeadline.textContent = 'CHYBA';
+            resultDetail.textContent = 'Nepodařilo se uložit výsledek.';
+        }
+    } catch (error) {
+        console.error('Save spin result error:', error);
+        resultHeadline.textContent = 'CHYBA';
+        resultDetail.textContent = 'Komunikační chyba při ukládání výsledku.';
+    }
+}
 
 function spin(reelIndex) {
     if (!spinningReels[reelIndex]) return;
@@ -210,7 +353,7 @@ function spin(reelIndex) {
     const symbolsPerSet = symbols.length;
     const totalStripHeight = SYMBOL_HEIGHT * symbolsPerSet * 4;
     
-    // Zrychlení (pouze pro první válec, nebo se používá globální speed)
+    // Zrychlení (pouze pro první válec)
     let currentSpeed = speed; 
     if (reelIndex === 0 && speed < spinSpeed) {
          speed += 0.5;
@@ -241,7 +384,7 @@ function stopReel(reelIndex) {
     const targetSymbolIndex = nextCombination[reelIndex]; 
     const setIndex = 1; 
     
-    // Cíl je 2. symbol v druhé sadě (index 1 * symbol.length + symbol.index)
+    // Cíl je 2. symbol v druhé sadě
     const targetPosition = -(SYMBOL_HEIGHT * (setIndex * symbols.length + targetSymbolIndex));
     
     // Přechod pro zastavení
@@ -255,7 +398,7 @@ function stopReel(reelIndex) {
             
             resultHeadline.style.color = 'var(--highlight-color)';
             resultHeadline.textContent = `VÝSLEDEK ZATOČENÍ: +${result.win} bodů!`;
-            resultDetail.innerHTML = `Vytočená výhra: <strong>${result.win} bodů</strong>. ${result.message}`;
+            resultDetail.innerHTML = `Vytočená výhra: <strong>${result.win} bodů</strong>. ${escapeHtml(result.message)}`;
 
             // Reset rychlosti a stavu točení
             speed = 0;
@@ -269,13 +412,17 @@ function stopReel(reelIndex) {
 
 function activate() {
     if (!canSpin && !isSpinning) {
-        instructionsElement.textContent = 'Nejdříve správně odpověz na otázku!';
+        if (instructionsElement) {
+            instructionsElement.textContent = 'Nejdříve správně odpověz na otázku!';
+        }
         return;
     }
     
     if (!isSpinning && currentReel === 0 && canSpin) {
         // START TOČENÍ (první klik)
-        instructionsElement.textContent = 'Válec 1 se točí... Klikněte pro zastavení.';
+        if (instructionsElement) {
+            instructionsElement.textContent = 'Válec 1 se točí... Klikněte pro zastavení.';
+        }
         
         if (freeSpins > 0) {
             freeSpins--;
@@ -285,7 +432,7 @@ function activate() {
         isSpinning = true;
         spinningReels = [true, true, true];
         currentReel = 0;
-        canSpin = false; // Zakázat klikání na spiny, dokud neproběhnou 3 kliky
+        canSpin = false;
         
         reelStrips.forEach((strip, index) => {
             strip.style.transition = 'none';
@@ -301,10 +448,12 @@ function activate() {
             stopReel(currentReel);
             currentReel++;
             
-            if (currentReel < 3) {
-                 instructionsElement.textContent = `Válec ${currentReel + 1} se točí... Klikněte pro zastavení.`;
-            } else {
-                 instructionsElement.textContent = 'Čekám na vyhodnocení výhry...';
+            if (instructionsElement) {
+                if (currentReel < 3) {
+                    instructionsElement.textContent = `Válec ${currentReel + 1} se točí... Klikněte pro zastavení.`;
+                } else {
+                    instructionsElement.textContent = 'Čekám na vyhodnocení výhry...';
+                }
             }
         }
     }
