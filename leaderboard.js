@@ -5,17 +5,7 @@ async function loadLeaderboard() {
   listElement.innerHTML = "<li>Načítám data...</li>"
 
   try {
-    const response = await fetch("api.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "get_leaderboard" }),
-    })
-
-    if (!response.ok) {
-      throw new Error("Server error: " + response.status)
-    }
-
-    const data = await response.json()
+    const data = await window.API.getLeaderboard()
 
     if (data.success && data.leaderboard) {
       listElement.innerHTML = ""
@@ -39,6 +29,6 @@ async function loadLeaderboard() {
     }
   } catch (error) {
     console.error("Chyba komunikace při načítání žebříčku:", error)
-    listElement.innerHTML = "<li>Chyba komunikace se serverem.</li>"
+    listElement.innerHTML = "<li>Chyba komunikace.</li>"
   }
 }

@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", loadAdminUsers)
+
 function getAdminPassword() {
   const passwordInput = document.getElementById("adminPassword")
   if (!passwordInput) {
@@ -23,12 +25,7 @@ async function loadAdminUsers() {
   userTableBody.innerHTML = '<tr><td colspan="5">Načítám uživatele...</td></tr>'
 
   try {
-    const response = await fetch("api.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "admin_get_users", password }),
-    })
-    const data = await response.json()
+    const data = await window.API.adminGetUsers(password)
 
     if (data.success && data.users) {
       adminMessage.textContent = "Seznam uživatelů načten."
@@ -40,7 +37,7 @@ async function loadAdminUsers() {
       userTableBody.innerHTML = '<tr><td colspan="5">Chyba při načítání dat.</td></tr>'
     }
   } catch (error) {
-    adminMessage.textContent = "Chyba komunikace se serverem: " + error.message
+    adminMessage.textContent = "Chyba komunikace: " + error.message
     adminMessage.style.color = "red"
   }
 }
@@ -82,18 +79,25 @@ async function adminAction(action, targetUserId, confirmationMessage) {
   adminMessage.textContent = "Provádím akci..."
   adminMessage.style.color = "blue"
 
-  const requestBody = { action, password }
-  if (targetUserId) {
-    requestBody.targetUserId = targetUserId
-  }
-
   try {
-    const response = await fetch("api.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody),
-    })
-    const data = await response.json()
+    let data
+
+    switch (action) {
+      case "admin_reset_user_progress":
+        data = await window.API.adminResetUserProgress(password, targetUserId)
+        break
+      case "admin_kick_user":
+        data = await window.API.adminKickUser(password, targetUserId)
+        break
+      case "admin_kick_all":
+        data = await window.API.adminKickAll(password)
+        break
+      case "admin_reset_all_progress":
+        data = await window.API.adminResetAllProgress(password)
+        break
+      default:
+        throw new Error("Neznámá akce")
+    }
 
     if (data.success) {
       adminMessage.textContent = `Akce proběhla úspěšně: ${data.message || "Data aktualizována."}`
@@ -104,7 +108,7 @@ async function adminAction(action, targetUserId, confirmationMessage) {
       adminMessage.style.color = "red"
     }
   } catch (error) {
-    adminMessage.textContent = "Chyba komunikace se serverem: " + error.message
+    adminMessage.textContent = "Chyba komunikace: " + error.message
     adminMessage.style.color = "red"
   }
 }

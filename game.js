@@ -128,17 +128,7 @@ async function handleStartGame(e) {
   errorMessage.style.color = "blue"
 
   try {
-    const response = await fetch("api.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "start_game", username }),
-    })
-
-    if (!response.ok) {
-      throw new Error("Server error: " + response.status)
-    }
-
-    const data = await response.json()
+    const data = await window.API.startGame(username)
 
     if (data.success && data.user) {
       sessionData.setUserId(data.user.id)
@@ -149,7 +139,7 @@ async function handleStartGame(e) {
     }
   } catch (error) {
     errorMessage.style.color = "red"
-    errorMessage.textContent = "Chyba komunikace se serverem: " + error.message
+    errorMessage.textContent = "Chyba komunikace: " + error.message
     console.error("Start game error:", error)
   }
 }
@@ -168,17 +158,7 @@ async function loadGameState() {
   if (spinResultArea) spinResultArea.style.display = "none"
 
   try {
-    const response = await fetch("api.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "get_game_state", userId }),
-    })
-
-    if (!response.ok) {
-      throw new Error("Server error: " + response.status)
-    }
-
-    const data = await response.json()
+    const data = await window.API.getGameState(userId)
 
     if (data.success) {
       currentUser = data.username
@@ -302,22 +282,7 @@ async function submitAnswer(answer) {
   if (spinResultArea) spinResultArea.style.display = "block"
 
   try {
-    const response = await fetch("api.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "submit_answer",
-        userId,
-        answer,
-        questionId: currentQuestionId,
-      }),
-    })
-
-    if (!response.ok) {
-      throw new Error("Server error: " + response.status)
-    }
-
-    const data = await response.json()
+    const data = await window.API.submitAnswer(userId, answer, currentQuestionId)
 
     if (data.success) {
       if (data.isCorrect) {
@@ -430,22 +395,7 @@ function calculateWin(combination) {
 
 async function saveSpinResult(points, addFreeSpins) {
   try {
-    const response = await fetch("api.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "save_spin_result",
-        userId,
-        points,
-        freeSpinsAdd: addFreeSpins,
-      }),
-    })
-
-    if (!response.ok) {
-      throw new Error("Server error: " + response.status)
-    }
-
-    const data = await response.json()
+    const data = await window.API.saveSpinResult(userId, points, addFreeSpins)
 
     if (data.success) {
       balance = data.newScore
