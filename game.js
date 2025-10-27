@@ -8,13 +8,13 @@ let spinIntervals = [null, null, null];
 let currentReel = 0;
 let nextCombination = [];
 let spinDirection = -1; 
-let userId = localStorage.getItem('userId');
-let speed = 0; // FIX: Inicializace proměnné speed
+let userId = null; // Změněno: už ne localStorage
+let speed = 0;
 
 let balance = 0; 
 let freeSpins = 0;
 const SYMBOL_HEIGHT = 70; 
-const QUESTIONS_PER_TEST = 5; // FIX: Přidána konstanta
+const QUESTIONS_PER_TEST = 5;
 
 // Symboly musí být v podsložce 'symb'
 const symbols = [
@@ -39,16 +39,55 @@ const spinResultArea = document.getElementById('spinResultArea');
 const resultHeadline = document.getElementById('resultHeadline');
 const resultDetail = document.getElementById('resultDetail');
 
+// --- Session storage náhrada (in-memory) ---
+const sessionData = {
+    userId: null,
+    setUserId(id) {
+        this.userId = id;
+        // Můžeš použít sessionStorage jako fallback (funguje v browseru)
+        try {
+            sessionStorage.setItem('userId', id);
+        } catch (e) {
+            console.warn('SessionStorage není dostupný, používám pouze paměť');
+        }
+    },
+    getUserId() {
+        if (this.userId) return this.userId;
+        // Pokus o načtení ze sessionStorage
+        try {
+            const stored = sessionStorage.getItem('userId');
+            if (stored) {
+                this.userId = stored;
+                return stored;
+            }
+        } catch (e) {
+            console.warn('SessionStorage není dostupný');
+        }
+        return null;
+    },
+    clearUserId() {
+        this.userId = null;
+        try {
+            sessionStorage.removeItem('userId');
+        } catch (e) {}
+    }
+};
+
 // --- Inicializace ---
 document.addEventListener('DOMContentLoaded', () => {
     const startForm = document.getElementById('startForm');
     if (startForm) {
         startForm.addEventListener('submit', handleStartGame);
     } else if (document.getElementById('testArea')) {
+        userId = sessionData.getUserId();
         loadGameState();
     }
-    createSymbols();
-    initializePositions();
+    
+    // Inicializace symbolů a pozic pouze pokud existují reely
+    if (reelStrips.length > 0) {
+        createSymbols();
+        initializePositions();
+    }
 });
 
 function createSymbols() {
@@ -72,7 +111,7 @@ function initializePositions() {
     });
 }
 
-// FIX: Přidána chybějící funkce handleStartGame
+// --- START GAME ---
 async function handleStartGame(e) {
     e.preventDefault();
     const usernameInput = document.getElementById('usernameInput');
@@ -84,7 +123,13 @@ async function handleStartGame(e) {
         return;
     }
     
+    if (username.length > 50) {
+        errorMessage.textContent = 'Jméno je příliš dlouhé (max 50 znaků).';
+        return;
+    }
+    
     errorMessage.textContent = 'Načítám...';
+    errorMessage.style.color = 'blue';
     
     try {
         const response = await fetch('api.php', {
@@ -92,32 +137,40 @@ async function handleStartGame(e) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'start_game', username })
         });
+        
+        if (!response.ok) {
+            throw new Error('Server error: ' + response.status);
+        }
+        
         const data = await response.json();
         
         if (data.success && data.user) {
-            localStorage.setItem('userId', data.user.id);
+            sessionData.setUserId(data.user.id);
             window.location.href = 'test.html';
         } else {
+            errorMessage.style.color = 'red';
             errorMessage.textContent = data.error || 'Chyba při startu hry.';
         }
     } catch (error) {
-        errorMessage.textContent = 'Chyba komunikace se serverem.';
+        errorMessage.style.color = 'red';
+        errorMessage.textContent = 'Chyba komunikace se serverem: ' + error.message;
         console.error('Start game error:', error);
     }
 }
 
 // --- Logika Testu (test.html) ---
-
 async function loadGameState() {
-    userId = localStorage.getItem('userId');
+    userId = sessionData.getUserId();
+    
     if (!userId && window.location.pathname.endsWith('test.html')) {
+        console.warn('Chybí userId, redirect na index');
         setTimeout(() => window.location.href = 'index.html', 100);
         return;
     }
     
     // Reset stavu UI před načtením nového stavu
-    optionsContainer.style.display = 'block';
-    spinResultArea.style.display = 'none';
+    if (optionsContainer) optionsContainer.style.display = 'block';
+    if (spinResultArea) spinResultArea.style.display = 'none';
     
     try {
         const response = await fetch('api.php', {
@@ -125,6 +178,11 @@ async function loadGameState() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'get_game_state', userId })
         });
+        
+        if (!response.ok) {
+            throw new Error('Server error: ' + response.status);
+        }
+        
         const data = await response.json();
 
         if (data.success) {
@@ -136,64 +194,105 @@ async function loadGameState() {
             updateUI();
             displayQuestion(data);
         } else {
-            userDisplayElement.textContent = data.error;
+            if (userDisplayElement) {
+                userDisplayElement.textContent = data.error || 'Chyba načítání stavu';
+            }
+            
+            // Pokud uživatel není nalezen, redirect na index
+            if (data.error && data.error.includes('nenalezen')) {
+                setTimeout(() => window.location.href = 'index.html', 2000);
+            }
         }
     } catch (error) {
-        userDisplayElement.textContent = 'Chyba komunikace.';
+        if (userDisplayElement) {
+            userDisplayElement.textContent = 'Chyba komunikace: ' + error.message;
+        }
         console.error('Load game state error:', error);
     }
 }
 
 function updateUI() {
-    if (userDisplayElement) userDisplayElement.textContent = currentUser;
+    if (userDisplayElement) userDisplayElement.textContent = currentUser || 'Neznámý hráč';
     if (balanceElement) balanceElement.textContent = balance;
     if (freeSpinsCountElement) freeSpinsCountElement.textContent = freeSpins;
     
     if (reelsContainer) {
         reelsContainer.style.cursor = canSpin ? 'pointer' : 'not-allowed';
+        reelsContainer.style.opacity = canSpin ? '1' : '0.6';
     }
     
     if (instructionsElement) {
-        instructionsElement.textContent = isSpinning ? 'Klikněte pro zastavení válců.' : (canSpin ? 'Správně! Klikněte (nebo mezerník) pro točení!' : 'Odpověz na otázku.');
+        if (isSpinning) {
+            instructionsElement.textContent = 'Klikněte pro zastavení válců.';
+        } else if (canSpin) {
+            instructionsElement.textContent = 'Správně! Klikněte (nebo mezerník) pro točení!';
+        } else {
+            instructionsElement.textContent = 'Odpověz na otázku.';
+        }
     }
 }
 
 function displayQuestion(data) {
     const q = data.question;
-    optionsContainer.innerHTML = '';
     
+    if (!optionsContainer || !questionContainer) return;
+    
+    optionsContainer.innerHTML = '';
     questionContainer.style.display = 'block';
 
+    // Kontrola na konec testu
     if (q.text === 'TEST DOKONČEN!') {
-        instructionsElement.textContent = 'Test dokončen, přesměrování na výsledkovou tabuli...';
+        questionContainer.innerHTML = `
+            <div class="question-text" style="color: var(--highlight-color);">
+                <h2>🎉 TEST DOKONČEN!</h2>
+                <p>Gratulujeme! Tvé konečné skóre je <strong>${balance} bodů</strong>.</p>
+                <p>Přesměrování na výsledkovou tabuli...</p>
+            </div>
+        `;
+        if (instructionsElement) {
+            instructionsElement.textContent = 'Test dokončen!';
+        }
         setTimeout(() => window.location.href = 'leaderboard.html', 2000);
         return;
     }
     
+    // Kontrola na GAME OVER
     if (q.text === 'GAME OVER' || balance <= 0) {
-        questionContainer.innerHTML = `<div class="question-text" style="color: red;"><h2>GAME OVER</h2><p>Došly ti body! Tvé konečné skóre je ${balance} bodů.</p><p>Přesměrování na výsledkovou tabuli...</p></div>`;
-        instructionsElement.textContent = 'Hra skončila.';
-        reelsContainer.style.cursor = 'not-allowed';
+        questionContainer.innerHTML = `
+            <div class="question-text" style="color: red;">
+                <h2>💀 GAME OVER</h2>
+                <p>Došly ti body! Tvé konečné skóre je <strong>${balance} bodů</strong>.</p>
+                <p>Přesměrování na výsledkovou tabuli...</p>
+            </div>
+        `;
+        if (instructionsElement) {
+            instructionsElement.textContent = 'Hra skončila.';
+        }
+        if (reelsContainer) {
+            reelsContainer.style.cursor = 'not-allowed';
+        }
         setTimeout(() => window.location.href = 'leaderboard.html', 3000);
         return;
     }
 
+    // Zobrazení běžné otázky
     currentQuestionId = q.id;
     const questionTextElement = questionContainer.querySelector('.question-text');
     if (questionTextElement) {
         questionTextElement.innerHTML = `Otázka ${data.questionIndex + 1}/${data.maxQuestions}: ${escapeHtml(q.text)}`;
     }
 
+    // Vytvoření tlačítek s odpověďmi
     for (const key in q.options) {
         const button = document.createElement('button');
         button.textContent = `${key}: ${q.options[key]}`;
         button.dataset.answer = key;
+        button.className = 'option-button';
         button.onclick = () => submitAnswer(key);
         optionsContainer.appendChild(button);
     }
 }
 
-// FIX: Přidána funkce pro escapování HTML (XSS prevence)
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
@@ -201,57 +300,95 @@ function escapeHtml(text) {
 }
 
 async function submitAnswer(answer) {
-    if (canSpin || isSpinning) return; 
+    if (canSpin || isSpinning) {
+        console.warn('Nelze odpovídat během spinu');
+        return;
+    }
+    
+    // Deaktivace tlačítek
+    const buttons = optionsContainer.querySelectorAll('button');
+    buttons.forEach(btn => btn.disabled = true);
     
     // Schovat možnosti otázek
-    optionsContainer.style.display = 'none';
-    spinResultArea.style.display = 'block';
+    if (optionsContainer) optionsContainer.style.display = 'none';
+    if (spinResultArea) spinResultArea.style.display = 'block';
     
     try {
         const response = await fetch('api.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'submit_answer', userId, answer, questionId: currentQuestionId })
+            body: JSON.stringify({ 
+                action: 'submit_answer', 
+                userId, 
+                answer, 
+                questionId: currentQuestionId 
+            })
         });
+        
+        if (!response.ok) {
+            throw new Error('Server error: ' + response.status);
+        }
+        
         const data = await response.json();
 
         if (data.success) {
             if (data.isCorrect) {
+                // SPRÁVNÁ ODPOVĚĎ
                 canSpin = true;
                 updateUI();
-                resultHeadline.style.color = 'var(--highlight-color)';
-                resultHeadline.textContent = 'SPRÁVNĚ!';
-                resultDetail.textContent = 'Klikněte 3x (nebo 3x mezerník) na automat pro zatočení a získání bodů!';
+                if (resultHeadline) {
+                    resultHeadline.style.color = 'var(--highlight-color)';
+                    resultHeadline.textContent = '✅ SPRÁVNĚ!';
+                }
+                if (resultDetail) {
+                    resultDetail.textContent = 'Klikněte 3x (nebo 3x mezerník) na automat pro zatočení a získání bodů!';
+                }
             } else {
+                // ŠPATNÁ ODPOVĚĎ
                 balance = data.newScore; 
                 updateUI();
-                resultHeadline.style.color = 'red';
-                resultHeadline.textContent = 'ŠPATNĚ!';
-                resultDetail.textContent = `Ztrácíš 1 bod. Zbývá bodů: ${balance}. Přecházím na další otázku...`;
+                if (resultHeadline) {
+                    resultHeadline.style.color = 'red';
+                    resultHeadline.textContent = '❌ ŠPATNĚ!';
+                }
+                if (resultDetail) {
+                    resultDetail.textContent = `Ztrácíš 1 bod. Zbývá bodů: ${balance}. Přecházím na další otázku...`;
+                }
                 
+                // Přesun na další otázku
                 if (balance > 0) {
                     setTimeout(loadGameState, 2500); 
                 } else {
                     setTimeout(loadGameState, 500); 
                 }
             }
+        } else {
+            throw new Error(data.error || 'Neznámá chyba');
         }
     } catch (error) {
-        resultHeadline.style.color = 'red';
-        resultHeadline.textContent = 'CHYBA';
-        resultDetail.textContent = 'Komunikační chyba. Zkuste znovu.';
-        optionsContainer.style.display = 'block';
-        spinResultArea.style.display = 'none';
+        if (resultHeadline) {
+            resultHeadline.style.color = 'red';
+            resultHeadline.textContent = '⚠️ CHYBA';
+        }
+        if (resultDetail) {
+            resultDetail.textContent = 'Komunikační chyba: ' + error.message;
+        }
+        
+        // Znovu zobrazit možnosti
+        setTimeout(() => {
+            if (optionsContainer) optionsContainer.style.display = 'block';
+            if (spinResultArea) spinResultArea.style.display = 'none';
+            buttons.forEach(btn => btn.disabled = false);
+        }, 2000);
+        
         console.error('Submit answer error:', error);
     }
 }
 
 // --- Logika Automatu ---
-
 const spinSpeed = 20; 
 const decelerationDuration = 1500; 
 
-// FIX: Přidána chybějící funkce generateCombination
 function generateCombination() {
     const combination = [];
     for (let i = 0; i < 3; i++) {
@@ -260,7 +397,6 @@ function generateCombination() {
     return combination;
 }
 
-// FIX: Přidána chybějící funkce calculateWin
 function calculateWin(combination) {
     const [a, b, c] = combination;
     
@@ -274,28 +410,28 @@ function calculateWin(combination) {
         switch(symbolIndex) {
             case 0: // Money
                 win = 5;
-                message = 'Tři peníze! +5 bodů!';
+                message = '💰 Tři peníze! +5 bodů!';
                 break;
             case 1: // Star
                 win = 3;
                 addFreeSpins = 1;
-                message = 'Tři hvězdy! +3 body a +1 volné zatočení!';
+                message = '⭐ Tři hvězdy! +3 body a +1 volné zatočení!';
                 break;
             case 2: // Cherry
                 win = 2;
-                message = 'Tři třešně! +2 body!';
+                message = '🍒 Tři třešně! +2 body!';
                 break;
             case 3: // Plum
                 win = 2;
-                message = 'Tři švestky! +2 body!';
+                message = '🍑 Tři švestky! +2 body!';
                 break;
             case 4: // Grapes
                 win = 2;
-                message = 'Tři hrozny! +2 body!';
+                message = '🍇 Tři hrozny! +2 body!';
                 break;
             case 5: // Roulette
                 win = 4;
-                message = 'Tři rulety! +4 body!';
+                message = '🎰 Tři rulety! +4 body!';
                 break;
         }
         
@@ -304,14 +440,13 @@ function calculateWin(combination) {
     
     // Kontrola dvou stejných
     if (a === b || b === c || a === c) {
-        return { win: 1, addFreeSpins: 0, message: 'Dva stejné symboly! +1 bod!' };
+        return { win: 1, addFreeSpins: 0, message: '🎯 Dva stejné symboly! +1 bod!' };
     }
     
     // Žádná výhra
-    return { win: 0, addFreeSpins: 0, message: 'Bohužel žádná výhra. Zkus to znovu!' };
+    return { win: 0, addFreeSpins: 0, message: '😕 Bohužel žádná výhra. Zkus to znovu!' };
 }
 
-// FIX: Přidána chybějící funkce saveSpinResult
 async function saveSpinResult(points, addFreeSpins) {
     try {
         const response = await fetch('api.php', {
@@ -324,6 +459,11 @@ async function saveSpinResult(points, addFreeSpins) {
                 freeSpinsAdd: addFreeSpins 
             })
         });
+        
+        if (!response.ok) {
+            throw new Error('Server error: ' + response.status);
+        }
+        
         const data = await response.json();
 
         if (data.success) {
@@ -336,13 +476,12 @@ async function saveSpinResult(points, addFreeSpins) {
                 loadGameState();
             }, 3000);
         } else {
-            resultHeadline.textContent = 'CHYBA';
-            resultDetail.textContent = 'Nepodařilo se uložit výsledek.';
+            throw new Error(data.error || 'Nepodařilo se uložit výsledek');
         }
     } catch (error) {
         console.error('Save spin result error:', error);
-        resultHeadline.textContent = 'CHYBA';
-        resultDetail.textContent = 'Komunikační chyba při ukládání výsledku.';
+        if (resultHeadline) resultHeadline.textContent = '⚠️ CHYBA';
+        if (resultDetail) resultDetail.textContent = 'Komunikační chyba: ' + error.message;
     }
 }
 
@@ -396,9 +535,14 @@ function stopReel(reelIndex) {
         setTimeout(() => {
             const result = calculateWin(nextCombination);
             
-            resultHeadline.style.color = 'var(--highlight-color)';
-            resultHeadline.textContent = `VÝSLEDEK ZATOČENÍ: +${result.win} bodů!`;
-            resultDetail.innerHTML = `Vytočená výhra: <strong>${result.win} bodů</strong>. ${escapeHtml(result.message)}`;
+            if (resultHeadline) {
+                resultHeadline.style.color = result.win > 0 ? 'var(--highlight-color)' : 'orange';
+                resultHeadline.textContent = `🎰 VÝSLEDEK: +${result.win} bodů!`;
+            }
+            
+            if (resultDetail) {
+                resultDetail.innerHTML = `<strong>${escapeHtml(result.message)}</strong>`;
+            }
 
             // Reset rychlosti a stavu točení
             speed = 0;
@@ -413,7 +557,7 @@ function stopReel(reelIndex) {
 function activate() {
     if (!canSpin && !isSpinning) {
         if (instructionsElement) {
-            instructionsElement.textContent = 'Nejdříve správně odpověz na otázku!';
+            instructionsElement.textContent = '⚠️ Nejdříve správně odpověz na otázku!';
         }
         return;
     }
@@ -421,7 +565,7 @@ function activate() {
     if (!isSpinning && currentReel === 0 && canSpin) {
         // START TOČENÍ (první klik)
         if (instructionsElement) {
-            instructionsElement.textContent = 'Válec 1 se točí... Klikněte pro zastavení.';
+            instructionsElement.textContent = '🎰 Válec 1 se točí... Klikněte pro zastavení.';
         }
         
         if (freeSpins > 0) {
@@ -442,7 +586,7 @@ function activate() {
         updateUI();
 
     } else if (isSpinning) {
-        // ZASTAVOVÁNÍ VÁLCŮ (druhý, třetí a čtvrtý klik)
+        // ZASTAVOVÁNÍ VÁLCŮ (druhý, třetí klik)
         
         if (currentReel < 3) {
             stopReel(currentReel);
@@ -450,9 +594,9 @@ function activate() {
             
             if (instructionsElement) {
                 if (currentReel < 3) {
-                    instructionsElement.textContent = `Válec ${currentReel + 1} se točí... Klikněte pro zastavení.`;
+                    instructionsElement.textContent = `🎰 Válec ${currentReel + 1} se točí... Klikněte pro zastavení.`;
                 } else {
-                    instructionsElement.textContent = 'Čekám na vyhodnocení výhry...';
+                    instructionsElement.textContent = '⏳ Čekám na vyhodnocení výhry...';
                 }
             }
         }
