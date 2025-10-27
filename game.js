@@ -72,15 +72,36 @@ const sessionData = {
 
 // --- Inicializace ---
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("[v0] DOMContentLoaded - game.js")
+
   const startForm = document.getElementById("startForm")
   if (startForm) {
+    console.log("[v0] Nalezen startForm, přidávám listener")
     startForm.addEventListener("submit", handleStartGame)
   } else if (document.getElementById("testArea")) {
+    console.log("[v0] Nalezen testArea, načítám stav hry")
     userId = sessionData.getUserId()
-    loadGameState()
+    console.log("[v0] userId ze session:", userId)
+
+    if (window.Storage) {
+      window.Storage.ensureInitialized().then(() => {
+        console.log("[v0] Storage inicializován, načítám stav hry")
+        loadGameState()
+      })
+    } else {
+      console.error("[v0] Storage není dostupný!")
+      setTimeout(() => {
+        if (window.Storage) {
+          window.Storage.ensureInitialized().then(() => {
+            loadGameState()
+          })
+        }
+      }, 100)
+    }
   }
 
   if (reelStrips.length > 0) {
+    console.log("[v0] Inicializuji válce automatu")
     createSymbols()
     initializePositions()
   }
@@ -110,6 +131,8 @@ function initializePositions() {
 // --- START GAME ---
 async function handleStartGame(e) {
   e.preventDefault()
+  console.log("[v0] handleStartGame spuštěna")
+
   const usernameInput = document.getElementById("usernameInput")
   const errorMessage = document.getElementById("errorMessage")
   const username = usernameInput.value.trim()
@@ -128,28 +151,34 @@ async function handleStartGame(e) {
   errorMessage.style.color = "blue"
 
   try {
+    console.log("[v0] Volám API.startGame pro:", username)
     const data = await window.API.startGame(username)
+    console.log("[v0] Odpověď z API.startGame:", data)
 
     if (data.success && data.user) {
+      console.log("[v0] Start úspěšný, userId:", data.user.id)
       sessionData.setUserId(data.user.id)
       window.location.href = "test.html"
     } else {
       errorMessage.style.color = "red"
       errorMessage.textContent = data.error || "Chyba při startu hry."
+      console.error("[v0] Start selhal:", data.error)
     }
   } catch (error) {
     errorMessage.style.color = "red"
     errorMessage.textContent = "Chyba komunikace: " + error.message
-    console.error("Start game error:", error)
+    console.error("[v0] Start game error:", error)
   }
 }
 
 // --- Logika Testu (test.html) ---
 async function loadGameState() {
+  console.log("[v0] loadGameState spuštěna")
   userId = sessionData.getUserId()
+  console.log("[v0] userId:", userId)
 
   if (!userId && window.location.pathname.endsWith("test.html")) {
-    console.warn("Chybí userId, redirect na index")
+    console.warn("[v0] Chybí userId, redirect na index")
     setTimeout(() => (window.location.href = "index.html"), 100)
     return
   }
@@ -158,7 +187,9 @@ async function loadGameState() {
   if (spinResultArea) spinResultArea.style.display = "none"
 
   try {
+    console.log("[v0] Volám API.getGameState")
     const data = await window.API.getGameState(userId)
+    console.log("[v0] Odpověď z API.getGameState:", data)
 
     if (data.success) {
       currentUser = data.username
@@ -166,9 +197,12 @@ async function loadGameState() {
       freeSpins = data.freeSpins
       canSpin = data.canSpin
 
+      console.log("[v0] Stav načten - user:", currentUser, "balance:", balance, "canSpin:", canSpin)
+
       updateUI()
       displayQuestion(data)
     } else {
+      console.error("[v0] getGameState selhalo:", data.error)
       if (userDisplayElement) {
         userDisplayElement.textContent = data.error || "Chyba načítání stavu"
       }
@@ -178,10 +212,10 @@ async function loadGameState() {
       }
     }
   } catch (error) {
+    console.error("[v0] Load game state error:", error)
     if (userDisplayElement) {
       userDisplayElement.textContent = "Chyba komunikace: " + error.message
     }
-    console.error("Load game state error:", error)
   }
 }
 
@@ -213,9 +247,13 @@ function escapeHtml(text) {
 }
 
 function displayQuestion(data) {
+  console.log("[v0] displayQuestion volána, data:", data)
   const q = data.question
 
-  if (!optionsContainer || !questionContainer) return
+  if (!optionsContainer || !questionContainer) {
+    console.error("[v0] Chybí DOM elementy pro zobrazení otázky")
+    return
+  }
 
   optionsContainer.innerHTML = ""
   questionContainer.style.display = "block"
@@ -254,9 +292,17 @@ function displayQuestion(data) {
   }
 
   currentQuestionId = q.id
+  console.log("[v0] Zobrazuji otázku ID:", currentQuestionId, "Text:", q.text.substring(0, 50))
+
   const questionTextElement = questionContainer.querySelector(".question-text")
   if (questionTextElement) {
     questionTextElement.innerHTML = `Otázka ${data.questionIndex + 1}/${data.maxQuestions}: ${escapeHtml(q.text)}`
+  }
+
+  if (!q.options || Object.keys(q.options).length === 0) {
+    console.error("[v0] Otázka nemá žádné možnosti odpovědí!")
+    optionsContainer.innerHTML = '<p style="color: red;">Chyba: Otázka nemá možnosti odpovědí.</p>'
+    return
   }
 
   for (const key in q.options) {
@@ -267,6 +313,8 @@ function displayQuestion(data) {
     button.onclick = () => submitAnswer(key)
     optionsContainer.appendChild(button)
   }
+
+  console.log("[v0] Zobrazeno", Object.keys(q.options).length, "možností odpovědí")
 }
 
 async function submitAnswer(answer) {
@@ -316,6 +364,7 @@ async function submitAnswer(answer) {
       throw new Error(data.error || "Neznámá chyba")
     }
   } catch (error) {
+    console.error("[v0] Submit answer error:", error)
     if (resultHeadline) {
       resultHeadline.style.color = "red"
       resultHeadline.textContent = "⚠️ CHYBA"

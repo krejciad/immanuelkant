@@ -7,10 +7,21 @@ const ADMIN_PASSWORD = "admin123"
 const STORAGE_KEYS = {
   USERS: "casino_users",
   QUESTIONS: "casino_questions",
+  INITIALIZED: "casino_initialized",
 }
+
+let initializationPromise = null
 
 // Pomocné funkce pro localStorage
 const Storage = {
+  isInitialized() {
+    return localStorage.getItem(STORAGE_KEYS.INITIALIZED) === "true"
+  },
+
+  markInitialized() {
+    localStorage.setItem(STORAGE_KEYS.INITIALIZED, "true")
+  },
+
   // Načtení uživatelů
   getUsers() {
     const data = localStorage.getItem(STORAGE_KEYS.USERS)
@@ -25,23 +36,47 @@ const Storage = {
   // Načtení otázek
   getQuestions() {
     const data = localStorage.getItem(STORAGE_KEYS.QUESTIONS)
-    if (!data) {
-      // Inicializace výchozích otázek
-      this.initializeQuestions()
-      return this.getQuestions()
-    }
-    return JSON.parse(data)
+    return data ? JSON.parse(data) : []
   },
 
-  // Inicializace otázek z questions.json
+  setQuestions(questions) {
+    localStorage.setItem(STORAGE_KEYS.QUESTIONS, JSON.stringify(questions))
+  },
+
   async initializeQuestions() {
     try {
+      console.log("[v0] Načítám otázky z questions.json...")
       const response = await fetch("questions.json")
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
       const data = await response.json()
-      localStorage.setItem(STORAGE_KEYS.QUESTIONS, JSON.stringify(data.questions))
+      console.log("[v0] Načteno otázek:", data.questions.length)
+      this.setQuestions(data.questions)
+      this.markInitialized()
+      return true
     } catch (error) {
-      console.error("Chyba při načítání otázek:", error)
+      console.error("[v0] Chyba při načítání otázek:", error)
+      return false
     }
+  },
+
+  async ensureInitialized() {
+    if (this.isInitialized()) {
+      console.log("[v0] Data již inicializována")
+      return true
+    }
+
+    if (initializationPromise) {
+      console.log("[v0] Čekám na probíhající inicializaci...")
+      return await initializationPromise
+    }
+
+    console.log("[v0] Spouštím inicializaci...")
+    initializationPromise = this.initializeQuestions()
+    const result = await initializationPromise
+    initializationPromise = null
+    return result
   },
 
   // Generování unikátního ID
@@ -52,14 +87,31 @@ const Storage = {
 
 // API funkce (náhrada za PHP backend)
 const API = {
-  // Start hry
   async startGame(username) {
+    console.log("[v0] startGame volána pro:", username)
+
+    // Zajistit inicializaci
+    const initialized = await Storage.ensureInitialized()
+    if (!initialized) {
+      return { success: false, error: "Nepodařilo se načíst otázky." }
+    }
+
     if (!username || username.length > 50) {
       return { success: false, error: "Neplatné jméno." }
     }
 
     const users = Storage.getUsers()
     const questions = Storage.getQuestions()
+
+    console.log("[v0] Počet otázek:", questions.length)
+    console.log("[v0] Počet uživatelů:", users.length)
+
+    if (questions.length < QUESTIONS_PER_TEST) {
+      return {
+        success: false,
+        error: `Nedostatek otázek (${questions.length}/${QUESTIONS_PER_TEST}).`,
+      }
+    }
 
     let user = users.find((u) => u.username === username)
 
@@ -73,6 +125,7 @@ const API = {
       user.questions_set = questionIds.slice(0, QUESTIONS_PER_TEST)
       user.current_question_index = 0
       user.can_spin = false
+      console.log("[v0] Reset existujícího uživatele:", user.username)
     } else {
       // Vytvoření nového uživatele
       const questionIds = questions.map((q) => q.id)
@@ -88,20 +141,31 @@ const API = {
         can_spin: false,
       }
       users.push(user)
+      console.log("[v0] Vytvořen nový uživatel:", user.username, "ID:", user.id)
     }
 
     Storage.setUsers(users)
     return { success: true, user: user }
   },
 
-  // Získání stavu hry
   async getGameState(userId) {
+    console.log("[v0] getGameState volána pro userId:", userId)
+
+    // Zajistit inicializaci
+    const initialized = await Storage.ensureInitialized()
+    if (!initialized) {
+      return { success: false, error: "Nepodařilo se načíst otázky." }
+    }
+
     const users = Storage.getUsers()
     const user = users.find((u) => u.id === userId)
 
     if (!user) {
+      console.log("[v0] Uživatel nenalezen, userId:", userId)
       return { success: false, error: "Uživatel nenalezen." }
     }
+
+    console.log("[v0] Nalezen uživatel:", user.username, "Score:", user.score)
 
     const questions = Storage.getQuestions()
     const qIndex = user.current_question_index
@@ -117,12 +181,16 @@ const API = {
           text: q.text,
           options: q.options,
         }
+        console.log("[v0] Načtena otázka:", q.id, q.text.substring(0, 50))
+      } else {
+        console.log("[v0] Otázka nenalezena, ID:", questionId)
       }
     } else {
       currentQuestion = {
         text: user.score <= 0 ? "GAME OVER" : "TEST DOKONČEN!",
         options: [],
       }
+      console.log("[v0] Konec hry:", currentQuestion.text)
     }
 
     return {
@@ -303,6 +371,15 @@ const API = {
     }
   },
 }
+
+console.log("[v0] storage.js načten, spouštím inicializaci...")
+Storage.ensureInitialized().then((success) => {
+  if (success) {
+    console.log("[v0] Inicializace dokončena úspěšně")
+  } else {
+    console.error("[v0] Inicializace selhala")
+  }
+})
 
 // Export pro použití v ostatních souborech
 window.API = API
