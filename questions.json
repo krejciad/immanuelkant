@@ -43,6 +43,17 @@
         "D": "Doména nejvyšší úrovně"
       },
       "correct": "C"
+    },
+    {
+      "id": 5,
+      "text": "Jaký protokol se používá pro bezpečný přenos dat na webu?",
+      "options": {
+        "A": "HTTP",
+        "B": "HTTPS",
+        "C": "FTP",
+        "D": "SMTP"
+      },
+      "correct": "B"
     }
   ]
 }

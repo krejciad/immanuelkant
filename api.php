@@ -1,12 +1,9 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-// Konstanta pro počáteční body a počet otázek
 const INITIAL_SCORE = 10;
 const QUESTIONS_PER_TEST = 5;
-const ADMIN_PASSWORD = 'admin123'; // FIX: Přidáno heslo pro admin
-
-// --- JSON Helpers (s jednoduchou zamykací logikou pro bezpečnost) ---
+const ADMIN_PASSWORD = 'admin123';
 
 function readUsers() {
     $usersData = [];
@@ -56,17 +53,13 @@ function generateUniqueId($username) {
     return hash('sha256', $username . time() . rand(0, 999999));
 }
 
-// FIX: Funkce pro sanitizaci vstupu
 function sanitizeInput($input) {
     return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
 }
 
-// FIX: Funkce pro validaci admin hesla
 function validateAdminPassword($password) {
     return $password === ADMIN_PASSWORD;
 }
-
-// --- Hlavní Logika API ---
 
 $rawInput = file_get_contents('php://input');
 $data = json_decode($rawInput, true);
@@ -80,7 +73,6 @@ $action = $data['action'] ?? '';
 $userId = $data['userId'] ?? '';
 
 switch ($action) {
-    // --- AKCE PRO UŽIVATELE/HRU ---
     case 'start_game':
         $username = sanitizeInput($data['username'] ?? '');
         if (empty($username)) {
@@ -98,7 +90,6 @@ switch ($action) {
 
         foreach ($users as $key => $user) {
             if ($user['username'] === $username) {
-                // Resetování stavu, pokud test skončil nebo se spouští nová hra
                 $allQuestions = readQuestions();
                 $questionIds = array_column($allQuestions, 'id');
                 shuffle($questionIds);
@@ -178,7 +169,6 @@ switch ($action) {
                 }
             }
         } else {
-            // Test je hotový nebo GAME OVER
             $currentQuestion = [
                 'text' => ($currentUser['score'] <= 0 ? 'GAME OVER' : 'TEST DOKONČEN!'), 
                 'options' => []
@@ -250,7 +240,6 @@ switch ($action) {
                 echo json_encode(['success' => false, 'error' => 'Chyba při ukládání.']);
             }
         } else {
-            // Špatná odpověď: -1 bod a přesun na další otázku
             $users[$userKey]['score'] = max(0, $users[$userKey]['score'] - 1);
             $users[$userKey]['current_question_index']++;
             $users[$userKey]['can_spin'] = false;
@@ -294,7 +283,6 @@ switch ($action) {
             exit;
         }
 
-        // Uložení výsledků a posun na další otázku
         $users[$userKey]['score'] = $users[$userKey]['score'] + $points;
         $users[$userKey]['freeSpins'] += $freeSpinsAdd;
         $users[$userKey]['current_question_index']++;
@@ -307,11 +295,9 @@ switch ($action) {
         }
         break;
 
-    // --- AKCE PRO LEADERBOARD ---
     case 'get_leaderboard':
         $users = readUsers();
         
-        // Seřazení uživatelů podle skóre
         usort($users, function($a, $b) {
             return $b['score'] <=> $a['score'];
         });
@@ -328,9 +314,7 @@ switch ($action) {
         echo json_encode(['success' => true, 'leaderboard' => $leaderboard]);
         break;
 
-    // --- AKCE PRO ADMIN (S OCHRANOU HESLEM) ---
     case 'admin_get_users':
-        // FIX: Přidána ochrana heslem
         $password = $data['password'] ?? '';
         if (!validateAdminPassword($password)) {
             echo json_encode(['success' => false, 'error' => 'Neplatné heslo.']);
@@ -342,7 +326,6 @@ switch ($action) {
         break;
 
     case 'admin_kick_user':
-        // FIX: Přidána ochrana heslem
         $password = $data['password'] ?? '';
         if (!validateAdminPassword($password)) {
             echo json_encode(['success' => false, 'error' => 'Neplatné heslo.']);
@@ -368,7 +351,6 @@ switch ($action) {
         break;
 
     case 'admin_reset_user_progress':
-        // FIX: Přidána ochrana heslem
         $password = $data['password'] ?? '';
         if (!validateAdminPassword($password)) {
             echo json_encode(['success' => false, 'error' => 'Neplatné heslo.']);
@@ -412,7 +394,6 @@ switch ($action) {
         break;
 
     case 'admin_kick_all':
-        // FIX: Přidána ochrana heslem
         $password = $data['password'] ?? '';
         if (!validateAdminPassword($password)) {
             echo json_encode(['success' => false, 'error' => 'Neplatné heslo.']);
@@ -427,7 +408,6 @@ switch ($action) {
         break;
 
     case 'admin_reset_all_progress':
-        // FIX: Přidána ochrana heslem
         $password = $data['password'] ?? '';
         if (!validateAdminPassword($password)) {
             echo json_encode(['success' => false, 'error' => 'Neplatné heslo.']);
