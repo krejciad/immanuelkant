@@ -137,12 +137,10 @@ function checkAnswer(selected, correct) {
     feedback.style.color = "green"
     canSpin = true
 
+    smoothScrollTo(slotSection)
     setTimeout(() => {
-      smoothScrollTo(slotSection)
-      setTimeout(() => {
-        startSpin()
-      }, 800)
-    }, 1000)
+      startSpin()
+    }, 800)
   } else {
     feedback.textContent = "❌ ŠPATNĚ! Správná odpověď: " + correct
     feedback.style.color = "red"
@@ -295,12 +293,9 @@ function showResult(result) {
 
   setTimeout(() => {
     smoothScrollTo(quizSection)
-
-    setTimeout(() => {
-      spinResultArea.innerHTML = ""
-      currentQuestionIndex++
-      showQuestion()
-    }, 1000)
+    spinResultArea.innerHTML = ""
+    currentQuestionIndex++
+    showQuestion()
   }, 2500)
 }
 
