@@ -8,38 +8,46 @@
     <title>Vědomostní Casino Test</title>
 </head>
 <body>
+    <!-- Navbar je nyní fixed -->
     <div class="top-nav">
         <div class="nav-left">
             <img src="symb/spst_logo.ico" alt="Logo" class="nav-logo">
             <span class="nav_name">Vědomostní Casino</span>
         </div>
-        <!-- Odstraněno jméno uživatele, ponecháno pouze skóre -->
         <div class="user-info">
             <span class="balance">Body: <span id="totalScore">0</span></span>
         </div>
     </div>
 
-    <div class="game-container">
-        <div class="test-area">
-            <div class="question-text" id="questionText">Načítání otázky...</div>
-            <div class="options" id="optionsContainer"></div>
-            <div class="feedback" id="feedback"></div>
-            <div class="instructions" id="instructions">Odpověz správně a roztočíš kolo!</div>
-        </div>
+    <!-- Rozděleno na dvě sekce pro scroll -->
+    <div class="page-container">
+        <!-- Sekce s kvízem -->
+        <section class="quiz-section" id="quizSection">
+            <div class="test-area">
+                <div class="question-text" id="questionText">Načítání otázky...</div>
+                <div class="options" id="optionsContainer"></div>
+                <div class="feedback" id="feedback"></div>
+                <div class="instructions" id="instructions">Odpověz správně a roztočíš kolo!</div>
+            </div>
+        </section>
 
-        <div class="reels-container" id="reelsContainer">
-            <div class="reel" id="reel1">
-                <div class="reel-strip" id="strip1"></div>
+        <!-- Sekce s ruletou -->
+        <section class="slot-section" id="slotSection">
+            <div class="slot-wrapper">
+                <div class="reels-container" id="reelsContainer">
+                    <div class="reel" id="reel1">
+                        <div class="reel-strip" id="strip1"></div>
+                    </div>
+                    <div class="reel" id="reel2">
+                        <div class="reel-strip" id="strip2"></div>
+                    </div>
+                    <div class="reel" id="reel3">
+                        <div class="reel-strip" id="strip3"></div>
+                    </div>
+                </div>
+                <div id="spinResultArea"></div>
             </div>
-            <div class="reel" id="reel2">
-                <div class="reel-strip" id="strip2"></div>
-            </div>
-            <div class="reel" id="reel3">
-                <div class="reel-strip" id="strip3"></div>
-            </div>
-        </div>
-
-        <div id="spinResultArea"></div>
+        </section>
     </div>
 
     <script src="game.js"></script>

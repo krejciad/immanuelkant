@@ -24,6 +24,12 @@ const instructions = document.getElementById("instructions")
 const totalScoreElement = document.getElementById("totalScore")
 const reelsContainer = document.getElementById("reelsContainer")
 const spinResultArea = document.getElementById("spinResultArea")
+const quizSection = document.getElementById("quizSection")
+const slotSection = document.getElementById("slotSection")
+
+function smoothScrollTo(element) {
+  element.scrollIntoView({ behavior: "smooth", block: "start" })
+}
 
 // Načtení otázek z JSON
 async function loadQuestions() {
@@ -130,9 +136,13 @@ function checkAnswer(selected, correct) {
     feedback.textContent = "✅ SPRÁVNĚ! Kolo se točí!"
     feedback.style.color = "green"
     canSpin = true
+
     setTimeout(() => {
-      startSpin()
-    }, 500)
+      smoothScrollTo(slotSection)
+      setTimeout(() => {
+        startSpin()
+      }, 800)
+    }, 1000)
   } else {
     feedback.textContent = "❌ ŠPATNĚ! Správná odpověď: " + correct
     feedback.style.color = "red"
@@ -141,7 +151,7 @@ function checkAnswer(selected, correct) {
     setTimeout(() => {
       currentQuestionIndex++
       showQuestion()
-    }, 2000)
+    }, 2500)
   }
 }
 
@@ -284,10 +294,14 @@ function showResult(result) {
   reelsContainer.style.cursor = "not-allowed"
 
   setTimeout(() => {
-    spinResultArea.innerHTML = ""
-    currentQuestionIndex++
-    showQuestion()
-  }, 3000)
+    smoothScrollTo(quizSection)
+
+    setTimeout(() => {
+      spinResultArea.innerHTML = ""
+      currentQuestionIndex++
+      showQuestion()
+    }, 1000)
+  }, 2500)
 }
 
 // Spuštění hry při načtení stránky
