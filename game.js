@@ -1,21 +1,12 @@
-// --- Globální proměnné a stav hry ---
-let currentUser = null
-let currentQuestionId = null
+// Globální proměnné
+let questions = []
+let currentQuestionIndex = 0
+let totalScore = 0
 let canSpin = false
 let isSpinning = false
-let spinningReels = [false, false, false]
-const spinIntervals = [null, null, null]
-let currentReel = 0
-let nextCombination = []
-const spinDirection = -1
-let userId = null
-let speed = 0
+let userName = "Hráč"
 
-let balance = 0
-let freeSpins = 0
 const SYMBOL_HEIGHT = 70
-const QUESTIONS_PER_TEST = 5
-
 const symbols = [
   "symb/icons8-money-50.png",
   "symb/icons8-star-50.png",
@@ -25,91 +16,74 @@ const symbols = [
   "symb/icons8-roulette-50.png",
 ]
 
-// Odkazy na DOM
-const reelStrips = document.querySelectorAll(".reel-strip")
-const balanceElement = document.getElementById("balance")
-const freeSpinsCountElement = document.getElementById("freeSpinsCount")
-const instructionsElement = document.getElementById("instructions")
-const userDisplayElement = document.getElementById("userDisplay")
-const questionContainer = document.getElementById("questionContainer")
+// DOM elementy
+const questionText = document.getElementById("questionText")
 const optionsContainer = document.getElementById("optionsContainer")
+const feedback = document.getElementById("feedback")
+const instructions = document.getElementById("instructions")
+const totalScoreElement = document.getElementById("totalScore")
+const userNameElement = document.getElementById("userName")
 const reelsContainer = document.getElementById("reelsContainer")
 const spinResultArea = document.getElementById("spinResultArea")
-const resultHeadline = document.getElementById("resultHeadline")
-const resultDetail = document.getElementById("resultDetail")
 
-// --- Session storage náhrada (in-memory) ---
-const sessionData = {
-  userId: null,
-  setUserId(id) {
-    this.userId = id
-    try {
-      sessionStorage.setItem("userId", id)
-    } catch (e) {
-      console.warn("SessionStorage není dostupný, používám pouze paměť")
-    }
-  },
-  getUserId() {
-    if (this.userId) return this.userId
-    try {
-      const stored = sessionStorage.getItem("userId")
-      if (stored) {
-        this.userId = stored
-        return stored
-      }
-    } catch (e) {
-      console.warn("SessionStorage není dostupný")
-    }
-    return null
-  },
-  clearUserId() {
-    this.userId = null
-    try {
-      sessionStorage.removeItem("userId")
-    } catch (e) {}
-  },
+// Načtení otázek z JSON
+async function loadQuestions() {
+  try {
+    const response = await fetch("questions.json")
+    const data = await response.json()
+    questions = data.questions
+    console.log("[v0] Načteno otázek:", questions.length)
+    return true
+  } catch (error) {
+    console.error("[v0] Chyba při načítání otázek:", error)
+    questionText.textContent = "Chyba při načítání otázek!"
+    return false
+  }
 }
 
-// --- Inicializace ---
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("[v0] DOMContentLoaded - game.js")
+// Inicializace hry
+async function initGame() {
+  console.log("[v0] Inicializace hry")
 
-  const startForm = document.getElementById("startForm")
-  if (startForm) {
-    console.log("[v0] Nalezen startForm, přidávám listener")
-    startForm.addEventListener("submit", handleStartGame)
-  } else if (document.getElementById("testArea")) {
-    console.log("[v0] Nalezen testArea, načítám stav hry")
-    userId = sessionData.getUserId()
-    console.log("[v0] userId ze session:", userId)
-
-    if (window.Storage) {
-      window.Storage.ensureInitialized().then(() => {
-        console.log("[v0] Storage inicializován, načítám stav hry")
-        loadGameState()
-      })
-    } else {
-      console.error("[v0] Storage není dostupný!")
-      setTimeout(() => {
-        if (window.Storage) {
-          window.Storage.ensureInitialized().then(() => {
-            loadGameState()
-          })
-        }
-      }, 100)
-    }
+  // Načtení jména z localStorage nebo prompt
+  const savedName = localStorage.getItem("playerName")
+  if (savedName) {
+    userName = savedName
+  } else {
+    userName = prompt("Zadej své jméno:") || "Hráč"
+    localStorage.setItem("playerName", userName)
   }
 
-  if (reelStrips.length > 0) {
-    console.log("[v0] Inicializuji válce automatu")
-    createSymbols()
-    initializePositions()
-  }
-})
+  userNameElement.textContent = userName
 
+  // Načtení skóre z localStorage
+  const savedScore = localStorage.getItem("totalScore")
+  if (savedScore) {
+    totalScore = Number.parseInt(savedScore)
+    totalScoreElement.textContent = totalScore
+  }
+
+  // Načtení otázek
+  const loaded = await loadQuestions()
+  if (!loaded) return
+
+  // Inicializace automatu
+  createSymbols()
+  initializePositions()
+
+  // Zobrazení první otázky
+  showQuestion()
+
+  // Event listener pro kliknutí na automat
+  reelsContainer.addEventListener("click", handleSpinClick)
+}
+
+// Vytvoření symbolů v automatech
 function createSymbols() {
+  const reelStrips = document.querySelectorAll(".reel-strip")
   reelStrips.forEach((strip) => {
     strip.innerHTML = ""
+    // Vytvoříme 4 sady symbolů pro plynulé scrollování
     for (let i = 0; i < 4; i++) {
       symbols.forEach((symbolUrl) => {
         const div = document.createElement("div")
@@ -121,461 +95,210 @@ function createSymbols() {
   })
 }
 
+// Inicializace pozic válců
 function initializePositions() {
+  const reelStrips = document.querySelectorAll(".reel-strip")
   reelStrips.forEach((strip) => {
     strip.style.top = "0px"
     strip.style.transition = "none"
   })
 }
 
-// --- START GAME ---
-async function handleStartGame(e) {
-  e.preventDefault()
-  console.log("[v0] handleStartGame spuštěna")
-
-  const usernameInput = document.getElementById("usernameInput")
-  const errorMessage = document.getElementById("errorMessage")
-  const username = usernameInput.value.trim()
-
-  if (!username) {
-    errorMessage.textContent = "Prosím zadejte jméno."
+// Zobrazení otázky
+function showQuestion() {
+  if (currentQuestionIndex >= questions.length) {
+    // Test dokončen
+    questionText.innerHTML = `<h2>🎉 TEST DOKONČEN!</h2><p>Tvé konečné skóre: <strong>${totalScore} bodů</strong></p>`
+    optionsContainer.innerHTML = ""
+    instructions.textContent = "Gratulujeme!"
+    feedback.textContent = ""
     return
   }
 
-  if (username.length > 50) {
-    errorMessage.textContent = "Jméno je příliš dlouhé (max 50 znaků)."
-    return
-  }
+  const question = questions[currentQuestionIndex]
+  questionText.textContent = `Otázka ${currentQuestionIndex + 1}/${questions.length}: ${question.text}`
 
-  errorMessage.textContent = "Načítám..."
-  errorMessage.style.color = "blue"
-
-  try {
-    console.log("[v0] Volám API.startGame pro:", username)
-    const data = await window.API.startGame(username)
-    console.log("[v0] Odpověď z API.startGame:", data)
-
-    if (data.success && data.user) {
-      console.log("[v0] Start úspěšný, userId:", data.user.id)
-      sessionData.setUserId(data.user.id)
-      window.location.href = "test.html"
-    } else {
-      errorMessage.style.color = "red"
-      errorMessage.textContent = data.error || "Chyba při startu hry."
-      console.error("[v0] Start selhal:", data.error)
-    }
-  } catch (error) {
-    errorMessage.style.color = "red"
-    errorMessage.textContent = "Chyba komunikace: " + error.message
-    console.error("[v0] Start game error:", error)
-  }
-}
-
-// --- Logika Testu (test.html) ---
-async function loadGameState() {
-  console.log("[v0] loadGameState spuštěna")
-  userId = sessionData.getUserId()
-  console.log("[v0] userId:", userId)
-
-  if (!userId && window.location.pathname.endsWith("test.html")) {
-    console.warn("[v0] Chybí userId, redirect na index")
-    setTimeout(() => (window.location.href = "index.html"), 100)
-    return
-  }
-
-  if (optionsContainer) optionsContainer.style.display = "block"
-  if (spinResultArea) spinResultArea.style.display = "none"
-
-  try {
-    console.log("[v0] Volám API.getGameState")
-    const data = await window.API.getGameState(userId)
-    console.log("[v0] Odpověď z API.getGameState:", data)
-
-    if (data.success) {
-      currentUser = data.username
-      balance = data.score
-      freeSpins = data.freeSpins
-      canSpin = data.canSpin
-
-      console.log("[v0] Stav načten - user:", currentUser, "balance:", balance, "canSpin:", canSpin)
-
-      updateUI()
-      displayQuestion(data)
-    } else {
-      console.error("[v0] getGameState selhalo:", data.error)
-      if (userDisplayElement) {
-        userDisplayElement.textContent = data.error || "Chyba načítání stavu"
-      }
-
-      if (data.error && data.error.includes("nenalezen")) {
-        setTimeout(() => (window.location.href = "index.html"), 2000)
-      }
-    }
-  } catch (error) {
-    console.error("[v0] Load game state error:", error)
-    if (userDisplayElement) {
-      userDisplayElement.textContent = "Chyba komunikace: " + error.message
-    }
-  }
-}
-
-function updateUI() {
-  if (userDisplayElement) userDisplayElement.textContent = currentUser || "Neznámý hráč"
-  if (balanceElement) balanceElement.textContent = balance
-  if (freeSpinsCountElement) freeSpinsCountElement.textContent = freeSpins
-
-  if (reelsContainer) {
-    reelsContainer.style.cursor = canSpin ? "pointer" : "not-allowed"
-    reelsContainer.style.opacity = canSpin ? "1" : "0.6"
-  }
-
-  if (instructionsElement) {
-    if (isSpinning) {
-      instructionsElement.textContent = "Klikněte pro zastavení válců."
-    } else if (canSpin) {
-      instructionsElement.textContent = "Správně! Klikněte (nebo mezerník) pro točení!"
-    } else {
-      instructionsElement.textContent = "Odpověz na otázku."
-    }
-  }
-}
-
-function escapeHtml(text) {
-  const div = document.createElement("div")
-  div.textContent = text
-  return div.innerHTML
-}
-
-function displayQuestion(data) {
-  console.log("[v0] displayQuestion volána, data:", data)
-  const q = data.question
-
-  if (!optionsContainer || !questionContainer) {
-    console.error("[v0] Chybí DOM elementy pro zobrazení otázky")
-    return
-  }
-
+  // Vymazání předchozích možností
   optionsContainer.innerHTML = ""
-  questionContainer.style.display = "block"
+  feedback.textContent = ""
 
-  if (q.text === "TEST DOKONČEN!") {
-    questionContainer.innerHTML = `
-            <div class="question-text" style="color: var(--highlight-color);">
-                <h2>🎉 TEST DOKONČEN!</h2>
-                <p>Gratulujeme! Tvé konečné skóre je <strong>${balance} bodů</strong>.</p>
-                <p>Přesměrování na výsledkovou tabuli...</p>
-            </div>
-        `
-    if (instructionsElement) {
-      instructionsElement.textContent = "Test dokončen!"
-    }
-    setTimeout(() => (window.location.href = "leaderboard.html"), 2000)
-    return
-  }
-
-  if (q.text === "GAME OVER" || balance <= 0) {
-    questionContainer.innerHTML = `
-            <div class="question-text" style="color: red;">
-                <h2>💀 GAME OVER</h2>
-                <p>Došly ti body! Tvé konečné skóre je <strong>${balance} bodů</strong>.</p>
-                <p>Přesměrování na výsledkovou tabuli...</p>
-            </div>
-        `
-    if (instructionsElement) {
-      instructionsElement.textContent = "Hra skončila."
-    }
-    if (reelsContainer) {
-      reelsContainer.style.cursor = "not-allowed"
-    }
-    setTimeout(() => (window.location.href = "leaderboard.html"), 3000)
-    return
-  }
-
-  currentQuestionId = q.id
-  console.log("[v0] Zobrazuji otázku ID:", currentQuestionId, "Text:", q.text.substring(0, 50))
-
-  const questionTextElement = questionContainer.querySelector(".question-text")
-  if (questionTextElement) {
-    questionTextElement.innerHTML = `Otázka ${data.questionIndex + 1}/${data.maxQuestions}: ${escapeHtml(q.text)}`
-  }
-
-  if (!q.options || Object.keys(q.options).length === 0) {
-    console.error("[v0] Otázka nemá žádné možnosti odpovědí!")
-    optionsContainer.innerHTML = '<p style="color: red;">Chyba: Otázka nemá možnosti odpovědí.</p>'
-    return
-  }
-
-  for (const key in q.options) {
+  // Vytvoření tlačítek s odpověďmi
+  for (const [key, value] of Object.entries(question.options)) {
     const button = document.createElement("button")
-    button.textContent = `${key}: ${q.options[key]}`
-    button.dataset.answer = key
-    button.className = "option-button"
-    button.onclick = () => submitAnswer(key)
+    button.textContent = `${key}: ${value}`
+    button.onclick = () => checkAnswer(key, question.correct)
     optionsContainer.appendChild(button)
   }
 
-  console.log("[v0] Zobrazeno", Object.keys(q.options).length, "možností odpovědí")
+  canSpin = false
+  updateUI()
 }
 
-async function submitAnswer(answer) {
-  if (canSpin || isSpinning) {
-    console.warn("Nelze odpovídat během spinu")
-    return
-  }
-
+// Kontrola odpovědi
+function checkAnswer(selected, correct) {
   const buttons = optionsContainer.querySelectorAll("button")
   buttons.forEach((btn) => (btn.disabled = true))
 
-  if (optionsContainer) optionsContainer.style.display = "none"
-  if (spinResultArea) spinResultArea.style.display = "block"
+  if (selected === correct) {
+    feedback.textContent = "✅ SPRÁVNĚ! Roztočíš kolo!"
+    feedback.style.color = "green"
+    canSpin = true
+    instructions.textContent = "Klikni na automat pro zatočení!"
+    reelsContainer.style.cursor = "pointer"
+    reelsContainer.style.opacity = "1"
+  } else {
+    feedback.textContent = "❌ ŠPATNĚ! Správná odpověď: " + correct
+    feedback.style.color = "red"
+    instructions.textContent = "Přecházím na další otázku..."
 
-  try {
-    const data = await window.API.submitAnswer(userId, answer, currentQuestionId)
-
-    if (data.success) {
-      if (data.isCorrect) {
-        canSpin = true
-        updateUI()
-        if (resultHeadline) {
-          resultHeadline.style.color = "var(--highlight-color)"
-          resultHeadline.textContent = "✅ SPRÁVNĚ!"
-        }
-        if (resultDetail) {
-          resultDetail.textContent = "Klikněte 3x (nebo 3x mezerník) na automat pro zatočení a získání bodů!"
-        }
-      } else {
-        balance = data.newScore
-        updateUI()
-        if (resultHeadline) {
-          resultHeadline.style.color = "red"
-          resultHeadline.textContent = "❌ ŠPATNĚ!"
-        }
-        if (resultDetail) {
-          resultDetail.textContent = `Ztrácíš 1 bod. Zbývá bodů: ${balance}. Přecházím na další otázku...`
-        }
-
-        if (balance > 0) {
-          setTimeout(loadGameState, 2500)
-        } else {
-          setTimeout(loadGameState, 500)
-        }
-      }
-    } else {
-      throw new Error(data.error || "Neznámá chyba")
-    }
-  } catch (error) {
-    console.error("[v0] Submit answer error:", error)
-    if (resultHeadline) {
-      resultHeadline.style.color = "red"
-      resultHeadline.textContent = "⚠️ CHYBA"
-    }
-    if (resultDetail) {
-      resultDetail.textContent = "Komunikační chyba: " + error.message
-    }
-
+    // Přejít na další otázku po 2 sekundách
     setTimeout(() => {
-      if (optionsContainer) optionsContainer.style.display = "block"
-      if (spinResultArea) spinResultArea.style.display = "none"
-      buttons.forEach((btn) => (btn.disabled = false))
+      currentQuestionIndex++
+      showQuestion()
     }, 2000)
-
-    console.error("Submit answer error:", error)
   }
 }
 
-// --- Logika Automatu ---
-const spinSpeed = 20
-const decelerationDuration = 1500
+// Aktualizace UI
+function updateUI() {
+  totalScoreElement.textContent = totalScore
+  localStorage.setItem("totalScore", totalScore)
 
-function generateCombination() {
-  const combination = []
-  for (let i = 0; i < 3; i++) {
-    combination.push(Math.floor(Math.random() * symbols.length))
-  }
-  return combination
-}
-
-function calculateWin(combination) {
-  const [a, b, c] = combination
-
-  if (a === b && b === c) {
-    const symbolIndex = a
-    let win = 0
-    let addFreeSpins = 0
-    let message = ""
-
-    switch (symbolIndex) {
-      case 0:
-        win = 5
-        message = "💰 Tři peníze! +5 bodů!"
-        break
-      case 1:
-        win = 3
-        addFreeSpins = 1
-        message = "⭐ Tři hvězdy! +3 body a +1 volné zatočení!"
-        break
-      case 2:
-        win = 2
-        message = "🍒 Tři třešně! +2 body!"
-        break
-      case 3:
-        win = 2
-        message = "🍑 Tři švestky! +2 body!"
-        break
-      case 4:
-        win = 2
-        message = "🍇 Tři hrozny! +2 body!"
-        break
-      case 5:
-        win = 4
-        message = "🎰 Tři rulety! +4 body!"
-        break
-    }
-
-    return { win, addFreeSpins, message }
-  }
-
-  if (a === b || b === c || a === c) {
-    return { win: 1, addFreeSpins: 0, message: "🎯 Dva stejné symboly! +1 bod!" }
-  }
-
-  return { win: 0, addFreeSpins: 0, message: "😕 Bohužel žádná výhra. Zkus to znovu!" }
-}
-
-async function saveSpinResult(points, addFreeSpins) {
-  try {
-    const data = await window.API.saveSpinResult(userId, points, addFreeSpins)
-
-    if (data.success) {
-      balance = data.newScore
-      freeSpins += addFreeSpins
-      updateUI()
-
-      setTimeout(() => {
-        loadGameState()
-      }, 3000)
-    } else {
-      throw new Error(data.error || "Nepodařilo se uložit výsledek")
-    }
-  } catch (error) {
-    console.error("Save spin result error:", error)
-    if (resultHeadline) resultHeadline.textContent = "⚠️ CHYBA"
-    if (resultDetail) resultDetail.textContent = "Komunikační chyba: " + error.message
+  if (canSpin) {
+    reelsContainer.style.cursor = "pointer"
+    reelsContainer.style.opacity = "1"
+    instructions.textContent = "Klikni na automat pro zatočení!"
+  } else {
+    reelsContainer.style.cursor = "not-allowed"
+    reelsContainer.style.opacity = "0.6"
+    instructions.textContent = "Odpověz správně a roztočíš kolo!"
   }
 }
 
-function spin(reelIndex) {
-  if (!spinningReels[reelIndex]) return
-
-  const strip = reelStrips[reelIndex]
-  const symbolsPerSet = symbols.length
-  const totalStripHeight = SYMBOL_HEIGHT * symbolsPerSet * 4
-
-  let currentSpeed = speed
-  if (reelIndex === 0 && speed < spinSpeed) {
-    speed += 0.5
-    currentSpeed = speed
-  } else if (reelIndex > 0) {
-    currentSpeed = spinSpeed
-  }
-
-  const currentTop = Number.parseFloat(strip.style.top) || 0
-  let newTop = currentTop + currentSpeed * spinDirection
-
-  if (Math.abs(newTop) >= totalStripHeight) {
-    newTop = 0
-  }
-
-  strip.style.top = `${newTop}px`
-  spinIntervals[reelIndex] = requestAnimationFrame(() => spin(reelIndex))
-}
-
-function stopReel(reelIndex) {
-  if (!spinningReels[reelIndex]) return
-
-  spinningReels[reelIndex] = false
-  cancelAnimationFrame(spinIntervals[reelIndex])
-
-  const strip = reelStrips[reelIndex]
-
-  const targetSymbolIndex = nextCombination[reelIndex]
-  const setIndex = 1
-
-  const targetPosition = -(SYMBOL_HEIGHT * (setIndex * symbols.length + targetSymbolIndex))
-
-  strip.style.transition = `top ${decelerationDuration / 1000}s cubic-bezier(0.25, 0.1, 0.25, 1)`
-  strip.style.top = `${targetPosition}px`
-
-  if (reelIndex === 2) {
-    setTimeout(() => {
-      const result = calculateWin(nextCombination)
-
-      if (resultHeadline) {
-        resultHeadline.style.color = result.win > 0 ? "var(--highlight-color)" : "orange"
-        resultHeadline.textContent = `🎰 VÝSLEDEK: +${result.win} bodů!`
-      }
-
-      if (resultDetail) {
-        resultDetail.innerHTML = `<strong>${escapeHtml(result.message)}</strong>`
-      }
-
-      speed = 0
-      isSpinning = false
-      currentReel = 0
-
-      saveSpinResult(result.win, result.addFreeSpins)
-    }, decelerationDuration + 200)
-  }
-}
-
-function activate() {
-  if (!canSpin && !isSpinning) {
-    if (instructionsElement) {
-      instructionsElement.textContent = "⚠️ Nejdříve správně odpověz na otázku!"
-    }
+// Kliknutí na automat
+function handleSpinClick() {
+  if (!canSpin || isSpinning) {
+    console.log("[v0] Nelze točit - canSpin:", canSpin, "isSpinning:", isSpinning)
     return
   }
 
-  if (!isSpinning && currentReel === 0 && canSpin) {
-    if (instructionsElement) {
-      instructionsElement.textContent = "🎰 Válec 1 se točí... Klikněte pro zastavení."
-    }
+  console.log("[v0] Spouštím točení")
+  startSpin()
+}
 
-    if (freeSpins > 0) {
-      freeSpins--
-    }
+// Spuštění točení
+function startSpin() {
+  isSpinning = true
+  canSpin = false
+  instructions.textContent = "Točím... Klikni pro zastavení!"
 
-    nextCombination = generateCombination()
-    isSpinning = true
-    spinningReels = [true, true, true]
-    currentReel = 0
-    canSpin = false
+  // Generování výsledné kombinace
+  const combination = [
+    Math.floor(Math.random() * symbols.length),
+    Math.floor(Math.random() * symbols.length),
+    Math.floor(Math.random() * symbols.length),
+  ]
 
-    reelStrips.forEach((strip, index) => {
-      strip.style.transition = "none"
-      strip.style.top = "0px"
-      spin(index)
-    })
-    updateUI()
-  } else if (isSpinning) {
-    if (currentReel < 3) {
-      stopReel(currentReel)
-      currentReel++
+  console.log("[v0] Cílová kombinace:", combination)
 
-      if (instructionsElement) {
-        if (currentReel < 3) {
-          instructionsElement.textContent = `🎰 Válec ${currentReel + 1} se točí... Klikněte pro zastavení.`
-        } else {
-          instructionsElement.textContent = "⏳ Čekám na vyhodnocení výhry..."
-        }
+  // Spuštění animace všech válců
+  const reelStrips = document.querySelectorAll(".reel-strip")
+  const spinDuration = 2000 // 2 sekundy
+
+  reelStrips.forEach((strip, index) => {
+    // Nastavení rychlé animace
+    strip.style.transition = "none"
+
+    // Spuštění rychlého scrollování
+    let position = 0
+    const spinInterval = setInterval(() => {
+      position -= 10
+      if (position <= -SYMBOL_HEIGHT * symbols.length * 4) {
+        position = 0
       }
-    }
+      strip.style.top = position + "px"
+    }, 20)
+
+    // Zastavení po určité době
+    setTimeout(
+      () => {
+        clearInterval(spinInterval)
+        stopReel(strip, combination[index], index === 2)
+      },
+      spinDuration + index * 300,
+    ) // Každý válec se zastaví o 300ms později
+  })
+
+  // Po dokončení všech válců
+  setTimeout(() => {
+    const result = calculateWin(combination)
+    showResult(result)
+  }, spinDuration + 900)
+}
+
+// Zastavení válce na konkrétním symbolu
+function stopReel(strip, symbolIndex, isLast) {
+  const targetPosition = -(SYMBOL_HEIGHT * (symbols.length + symbolIndex))
+  strip.style.transition = "top 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)"
+  strip.style.top = targetPosition + "px"
+
+  if (isLast) {
+    console.log("[v0] Poslední válec zastaven")
   }
 }
 
-document.addEventListener("keydown", (e) => {
-  if (e.code === "Space" && !e.repeat) {
-    e.preventDefault()
-    activate()
+// Výpočet výhry
+function calculateWin(combination) {
+  const [a, b, c] = combination
+
+  // Tři stejné symboly
+  if (a === b && b === c) {
+    const wins = [10, 8, 6, 5, 5, 12] // Body za každý symbol
+    return {
+      points: wins[a],
+      message: `🎰 TŘI STEJNÉ! +${wins[a]} bodů!`,
+    }
   }
-})
+
+  // Dva stejné symboly
+  if (a === b || b === c || a === c) {
+    return {
+      points: 3,
+      message: "🎯 DVA STEJNÉ! +3 body!",
+    }
+  }
+
+  // Žádná výhra
+  return {
+    points: 1,
+    message: "😕 Zkus to příště! +1 bod za pokus",
+  }
+}
+
+// Zobrazení výsledku
+function showResult(result) {
+  isSpinning = false
+  totalScore += result.points
+  updateUI()
+
+  spinResultArea.innerHTML = `
+        <div style="color: var(--highlight-color); font-size: 1.5em;">
+            ${result.message}
+        </div>
+        <div style="margin-top: 10px;">
+            Celkové skóre: ${totalScore} bodů
+        </div>
+    `
+
+  instructions.textContent = "Přecházím na další otázku..."
+
+  // Přejít na další otázku po 3 sekundách
+  setTimeout(() => {
+    spinResultArea.innerHTML = ""
+    currentQuestionIndex++
+    showQuestion()
+  }, 3000)
+}
+
+// Spuštění hry při načtení stránky
+document.addEventListener("DOMContentLoaded", initGame)

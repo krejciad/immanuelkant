@@ -5,24 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="symb/spst_logo.ico" type="image/x-icon"> 
     <link rel="stylesheet" href="style.css">
-    <title>Interaktivní Test - Start</title>
+    <title>Vědomostní Casino Test</title>
 </head>
 <body>
-    <div class="start-container">
-        <h1>Vítejte ve vědomostním Casino Testu!</h1>
-        <p>Pro start zadej své jméno.</p>
-        <form id="startForm">
-            <input type="text" id="usernameInput" placeholder="Tvé jméno (Resetuje se při každém startu)" required>
-            <button type="submit">Začít test</button>
-        </form>
-        <div id="errorMessage" style="color: red; margin-top: 10px;"></div>
-        <p style="margin-top: 20px;">
-            <a href="leaderboard.html">Zobrazit výsledky</a> | 
-            <a href="admin.html">Administrace</a>
-        </p>
+    <!-- Kompletně nový layout - kvíz s automatem v jedné stránce -->
+    <div class="top-nav">
+        <div class="nav-left">
+            <img src="symb/spst_logo.ico" alt="Logo" class="nav-logo">
+            <span class="nav_name">Vědomostní Casino</span>
+        </div>
+        <div class="user-info">
+            <span id="userName">Hráč</span>
+            <span class="balance">Body: <span id="totalScore">0</span></span>
+        </div>
     </div>
 
-    <script src="storage.js"></script>
+    <div class="game-container">
+        <!-- Test sekce -->
+        <div class="test-area">
+            <div class="question-text" id="questionText">Načítání otázky...</div>
+            <div class="options" id="optionsContainer"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="instructions" id="instructions">Odpověz správně a roztočíš kolo!</div>
+        </div>
+
+        <!-- Automat sekce -->
+        <div class="reels-container" id="reelsContainer">
+            <div class="reel" id="reel1">
+                <div class="reel-strip" id="strip1"></div>
+            </div>
+            <div class="reel" id="reel2">
+                <div class="reel-strip" id="strip2"></div>
+            </div>
+            <div class="reel" id="reel3">
+                <div class="reel-strip" id="strip3"></div>
+            </div>
+        </div>
+
+        <div id="spinResultArea"></div>
+    </div>
+
     <script src="game.js"></script>
 </body>
 </html>
