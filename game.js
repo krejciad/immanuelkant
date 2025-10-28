@@ -2,6 +2,7 @@
 let questions = []
 let currentQuestionIndex = 0
 let totalScore = 0
+let correctAnswers = 0
 let canSpin = false
 let isSpinning = false
 
@@ -43,12 +44,10 @@ async function loadQuestions() {
 async function initGame() {
   console.log("[v0] Inicializace hry")
 
-  // Načtení skóre z localStorage
-  const savedScore = localStorage.getItem("totalScore")
-  if (savedScore) {
-    totalScore = Number.parseInt(savedScore)
-    totalScoreElement.textContent = totalScore
-  }
+  localStorage.clear()
+  totalScore = 0
+  correctAnswers = 0
+  totalScoreElement.textContent = totalScore
 
   // Načtení otázek
   const loaded = await loadQuestions()
@@ -93,8 +92,9 @@ function initializePositions() {
 // Zobrazení otázky
 function showQuestion() {
   if (currentQuestionIndex >= questions.length) {
-    // Test dokončen
-    questionText.innerHTML = `<h2>🎉 TEST DOKONČEN!</h2><p>Tvé konečné skóre: <strong>${totalScore} bodů</strong></p>`
+    questionText.innerHTML = `<h2>🎉 TEST DOKONČEN!</h2>
+      <p>Tvé konečné skóre: <strong>${totalScore} bodů</strong></p>
+      <p>Správně zodpovězeno: <strong>${correctAnswers}/${questions.length}</strong></p>`
     optionsContainer.innerHTML = ""
     instructions.textContent = "Gratulujeme!"
     feedback.textContent = ""
@@ -126,6 +126,7 @@ function checkAnswer(selected, correct) {
   buttons.forEach((btn) => (btn.disabled = true))
 
   if (selected === correct) {
+    correctAnswers++
     feedback.textContent = "✅ SPRÁVNĚ! Kolo se točí!"
     feedback.style.color = "green"
     canSpin = true
@@ -147,7 +148,6 @@ function checkAnswer(selected, correct) {
 // Aktualizace UI
 function updateUI() {
   totalScoreElement.textContent = totalScore
-  localStorage.setItem("totalScore", totalScore)
 
   if (canSpin) {
     reelsContainer.style.cursor = "pointer"
@@ -155,7 +155,7 @@ function updateUI() {
     instructions.textContent = "Klikni na automat pro zastavení!"
   } else {
     reelsContainer.style.cursor = "not-allowed"
-    reelsContainer.style.opacity = "0.6"
+    reelsContainer.style.opacity = "1"
     instructions.textContent = "Odpověz správně a roztočíš kolo!"
   }
 }
