@@ -549,6 +549,28 @@
         "D": "Víra je důležitější než rozum."
       },
       "correct": "B"
+    },
+    {
+      "id": 51,
+      "text": "Patří Erik do vězení?",
+      "options": {
+        "A": "Ano, určitě!",
+        "B": "Ne.",
+        "C": "Možná.",
+        "D": "Kebab."
+      },
+      "correct": "D"
+    },
+    {
+      "id": 52,
+      "text": "Proč je chudoba hrozbou?",
+      "options": {
+        "A": "100% fluffy hair.",
+        "B": "Bořek stavitel.",
+        "C": "Neustále roste.",
+        "D": "Tung tung tung sahur."
+      },
+      "correct": "C"
     }
   ]
 }

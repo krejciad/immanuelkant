@@ -6,6 +6,8 @@ let correctAnswers = 0
 let canSpin = false
 let isSpinning = false
 
+const QUESTIONS_PER_TEST = 10
+
 const SYMBOL_HEIGHT = 70
 const symbols = [
   "symb/icons8-money-50.png",
@@ -31,13 +33,20 @@ function smoothScrollTo(element) {
   element.scrollIntoView({ behavior: "smooth", block: "start" })
 }
 
+function selectRandomQuestions(allQuestions, count) {
+  const shuffled = [...allQuestions].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, count)
+}
+
 // Načtení otázek z JSON
 async function loadQuestions() {
   try {
     const response = await fetch("questions.json")
     const data = await response.json()
-    questions = data.questions
-    console.log("[v0] Načteno otázek:", questions.length)
+    const allQuestions = data.questions
+    questions = selectRandomQuestions(allQuestions, QUESTIONS_PER_TEST)
+    console.log("[v0] Načteno otázek celkem:", allQuestions.length)
+    console.log("[v0] Vybráno otázek pro test:", questions.length)
     return true
   } catch (error) {
     console.error("[v0] Chyba při načítání otázek:", error)
@@ -97,10 +106,10 @@ function initializePositions() {
 
 // Zobrazení otázky
 function showQuestion() {
-  if (currentQuestionIndex >= questions.length) {
+  if (currentQuestionIndex >= QUESTIONS_PER_TEST) {
     questionText.innerHTML = `<h2>🎉 TEST DOKONČEN!</h2>
       <p>Tvé konečné skóre: <strong>${totalScore} bodů</strong></p>
-      <p>Správně zodpovězeno: <strong>${correctAnswers}/${questions.length}</strong></p>`
+      <p>Správně zodpovězeno: <strong>${correctAnswers}/${QUESTIONS_PER_TEST}</strong></p>`
     optionsContainer.innerHTML = ""
     instructions.textContent = "Gratulujeme!"
     feedback.textContent = ""
@@ -108,7 +117,7 @@ function showQuestion() {
   }
 
   const question = questions[currentQuestionIndex]
-  questionText.textContent = `Otázka ${currentQuestionIndex + 1}/${questions.length}: ${question.text}`
+  questionText.textContent = `Otázka ${currentQuestionIndex + 1}/${QUESTIONS_PER_TEST}: ${question.text}`
 
   // Vymazání předchozích možností
   optionsContainer.innerHTML = ""
