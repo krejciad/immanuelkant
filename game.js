@@ -4,7 +4,6 @@ let currentQuestionIndex = 0
 let totalScore = 0
 let canSpin = false
 let isSpinning = false
-let userName = "Hráč"
 
 const SYMBOL_HEIGHT = 70
 const symbols = [
@@ -22,7 +21,6 @@ const optionsContainer = document.getElementById("optionsContainer")
 const feedback = document.getElementById("feedback")
 const instructions = document.getElementById("instructions")
 const totalScoreElement = document.getElementById("totalScore")
-const userNameElement = document.getElementById("userName")
 const reelsContainer = document.getElementById("reelsContainer")
 const spinResultArea = document.getElementById("spinResultArea")
 
@@ -45,17 +43,6 @@ async function loadQuestions() {
 async function initGame() {
   console.log("[v0] Inicializace hry")
 
-  // Načtení jména z localStorage nebo prompt
-  const savedName = localStorage.getItem("playerName")
-  if (savedName) {
-    userName = savedName
-  } else {
-    userName = prompt("Zadej své jméno:") || "Hráč"
-    localStorage.setItem("playerName", userName)
-  }
-
-  userNameElement.textContent = userName
-
   // Načtení skóre z localStorage
   const savedScore = localStorage.getItem("totalScore")
   if (savedScore) {
@@ -74,8 +61,7 @@ async function initGame() {
   // Zobrazení první otázky
   showQuestion()
 
-  // Event listener pro kliknutí na automat
-  reelsContainer.addEventListener("click", handleSpinClick)
+  reelsContainer.addEventListener("click", handleStopClick)
 }
 
 // Vytvoření symbolů v automatech
@@ -140,18 +126,17 @@ function checkAnswer(selected, correct) {
   buttons.forEach((btn) => (btn.disabled = true))
 
   if (selected === correct) {
-    feedback.textContent = "✅ SPRÁVNĚ! Roztočíš kolo!"
+    feedback.textContent = "✅ SPRÁVNĚ! Kolo se točí!"
     feedback.style.color = "green"
     canSpin = true
-    instructions.textContent = "Klikni na automat pro zatočení!"
-    reelsContainer.style.cursor = "pointer"
-    reelsContainer.style.opacity = "1"
+    setTimeout(() => {
+      startSpin()
+    }, 500)
   } else {
     feedback.textContent = "❌ ŠPATNĚ! Správná odpověď: " + correct
     feedback.style.color = "red"
     instructions.textContent = "Přecházím na další otázku..."
 
-    // Přejít na další otázku po 2 sekundách
     setTimeout(() => {
       currentQuestionIndex++
       showQuestion()
@@ -167,7 +152,7 @@ function updateUI() {
   if (canSpin) {
     reelsContainer.style.cursor = "pointer"
     reelsContainer.style.opacity = "1"
-    instructions.textContent = "Klikni na automat pro zatočení!"
+    instructions.textContent = "Klikni na automat pro zastavení!"
   } else {
     reelsContainer.style.cursor = "not-allowed"
     reelsContainer.style.opacity = "0.6"
@@ -175,41 +160,41 @@ function updateUI() {
   }
 }
 
-// Kliknutí na automat
-function handleSpinClick() {
-  if (!canSpin || isSpinning) {
-    console.log("[v0] Nelze točit - canSpin:", canSpin, "isSpinning:", isSpinning)
+function handleStopClick() {
+  if (!isSpinning) {
+    console.log("[v0] Kolo se netočí, nelze zastavit")
     return
   }
 
-  console.log("[v0] Spouštím točení")
-  startSpin()
+  console.log("[v0] Zastavuji točení")
+  stopSpin()
 }
 
 // Spuštění točení
 function startSpin() {
+  if (isSpinning) return
+
   isSpinning = true
   canSpin = false
-  instructions.textContent = "Točím... Klikni pro zastavení!"
+  instructions.textContent = "Kolo se točí! Klikni pro zastavení!"
+  reelsContainer.style.cursor = "pointer"
 
-  // Generování výsledné kombinace
-  const combination = [
+  window.targetCombination = [
     Math.floor(Math.random() * symbols.length),
     Math.floor(Math.random() * symbols.length),
     Math.floor(Math.random() * symbols.length),
   ]
 
-  console.log("[v0] Cílová kombinace:", combination)
+  console.log("[v0] Cílová kombinace:", window.targetCombination)
 
-  // Spuštění animace všech válců
+  // Spuštění animace všech válců - nekonečné točení
   const reelStrips = document.querySelectorAll(".reel-strip")
-  const spinDuration = 2000 // 2 sekundy
+
+  window.spinIntervals = []
 
   reelStrips.forEach((strip, index) => {
-    // Nastavení rychlé animace
     strip.style.transition = "none"
 
-    // Spuštění rychlého scrollování
     let position = 0
     const spinInterval = setInterval(() => {
       position -= 10
@@ -219,32 +204,37 @@ function startSpin() {
       strip.style.top = position + "px"
     }, 20)
 
-    // Zastavení po určité době
-    setTimeout(
-      () => {
-        clearInterval(spinInterval)
-        stopReel(strip, combination[index], index === 2)
-      },
-      spinDuration + index * 300,
-    ) // Každý válec se zastaví o 300ms později
+    window.spinIntervals.push(spinInterval)
+  })
+}
+
+function stopSpin() {
+  if (!isSpinning) return
+
+  console.log("[v0] Zastavuji všechny válce najednou")
+
+  // Zastavení všech intervalů
+  window.spinIntervals.forEach((interval) => clearInterval(interval))
+
+  const reelStrips = document.querySelectorAll(".reel-strip")
+
+  // Zastavení všech válců najednou na cílové pozici
+  reelStrips.forEach((strip, index) => {
+    stopReel(strip, window.targetCombination[index])
   })
 
-  // Po dokončení všech válců
+  // Zobrazení výsledku po animaci zastavení
   setTimeout(() => {
-    const result = calculateWin(combination)
+    const result = calculateWin(window.targetCombination)
     showResult(result)
-  }, spinDuration + 900)
+  }, 600)
 }
 
 // Zastavení válce na konkrétním symbolu
-function stopReel(strip, symbolIndex, isLast) {
+function stopReel(strip, symbolIndex) {
   const targetPosition = -(SYMBOL_HEIGHT * (symbols.length + symbolIndex))
   strip.style.transition = "top 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)"
   strip.style.top = targetPosition + "px"
-
-  if (isLast) {
-    console.log("[v0] Poslední válec zastaven")
-  }
 }
 
 // Výpočet výhry
@@ -291,8 +281,8 @@ function showResult(result) {
     `
 
   instructions.textContent = "Přecházím na další otázku..."
+  reelsContainer.style.cursor = "not-allowed"
 
-  // Přejít na další otázku po 3 sekundách
   setTimeout(() => {
     spinResultArea.innerHTML = ""
     currentQuestionIndex++

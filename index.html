@@ -8,20 +8,18 @@
     <title>Vědomostní Casino Test</title>
 </head>
 <body>
-    <!-- Kompletně nový layout - kvíz s automatem v jedné stránce -->
     <div class="top-nav">
         <div class="nav-left">
             <img src="symb/spst_logo.ico" alt="Logo" class="nav-logo">
             <span class="nav_name">Vědomostní Casino</span>
         </div>
+        <!-- Odstraněno jméno uživatele, ponecháno pouze skóre -->
         <div class="user-info">
-            <span id="userName">Hráč</span>
             <span class="balance">Body: <span id="totalScore">0</span></span>
         </div>
     </div>
 
     <div class="game-container">
-        <!-- Test sekce -->
         <div class="test-area">
             <div class="question-text" id="questionText">Načítání otázky...</div>
             <div class="options" id="optionsContainer"></div>
@@ -29,7 +27,6 @@
             <div class="instructions" id="instructions">Odpověz správně a roztočíš kolo!</div>
         </div>
 
-        <!-- Automat sekce -->
         <div class="reels-container" id="reelsContainer">
             <div class="reel" id="reel1">
                 <div class="reel-strip" id="strip1"></div>
