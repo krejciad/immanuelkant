@@ -2,56 +2,551 @@
   "questions": [
     {
       "id": 1,
-      "text": "Který z následujících programovacích jazyků se nejčastěji používá pro strukturování webového obsahu?",
+      "text": "Kde se narodil Immanuel Kant?",
       "options": {
-        "A": "CSS",
-        "B": "HTML",
-        "C": "JavaScript",
-        "D": "PHP"
+        "A": "Berlín",
+        "B": "Vídeň",
+        "C": "Königsberg",
+        "D": "Lipsko"
       },
-      "correct": "B"
+      "correct": "C"
     },
     {
       "id": 2,
-      "text": "Jaká zkratka se používá pro globálně unikátní identifikátor?",
+      "text": "V jakém století žil Immanuel Kant?",
       "options": {
-        "A": "GUI",
-        "B": "URL",
-        "C": "UUID",
-        "D": "XML"
+        "A": "16.",
+        "B": "17.",
+        "C": "18.",
+        "D": "19."
       },
       "correct": "C"
     },
     {
       "id": 3,
-      "text": "Které číslo je binárně reprezentováno jako 1010?",
+      "text": "K jakému filozofickému období Kant patřil?",
       "options": {
-        "A": "8",
-        "B": "10",
-        "C": "12",
-        "D": "16"
+        "A": "Renesance",
+        "B": "Osvícenství",
+        "C": "Romantismus",
+        "D": "Pozitivismus"
       },
       "correct": "B"
     },
     {
       "id": 4,
-      "text": "Co je to 'Hall' v kontextu počítačových sítí?",
+      "text": "Který filozofický směr chtěl Kant spojit?",
       "options": {
-        "A": "Síťový přepínač",
-        "B": "Internetový protokol",
-        "C": "Hala pro servery (datové centrum)",
-        "D": "Doména nejvyšší úrovně"
+        "A": "Idealismus a materialismus",
+        "B": "Empirismus a racionalismus",
+        "C": "Skepticismus a dogmatismus",
+        "D": "Pragmatismus a existencialismus"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 5,
+      "text": "Jak se nazývá Kantův slavný přelom ve filozofii?",
+      "options": {
+        "A": "Kritický zlom",
+        "B": "Filozofický paradox",
+        "C": "Koperníkovský obrat",
+        "D": "Racionalistický přerod"
       },
       "correct": "C"
     },
     {
-      "id": 5,
-      "text": "Jaký protokol se používá pro bezpečný přenos dat na webu?",
+      "id": 6,
+      "text": "Jaké jsou dvě základní složky poznání podle Kanta?",
       "options": {
-        "A": "HTTP",
-        "B": "HTTPS",
-        "C": "FTP",
-        "D": "SMTP"
+        "A": "Cit a víra",
+        "B": "Rozum a zkušenost",
+        "C": "Intuice a představivost",
+        "D": "Smysly a emoce"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 7,
+      "text": "Co znamená pojem 'a priori'?",
+      "options": {
+        "A": "Poznání ze zkušenosti",
+        "B": "Poznání před zkušeností",
+        "C": "Názor na základě pocitů",
+        "D": "Empirický závěr"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 8,
+      "text": "Co znamená pojem 'a posteriori'?",
+      "options": {
+        "A": "Poznání nezávislé na zkušenosti",
+        "B": "Poznání ze zkušenosti",
+        "C": "Instinktivní poznání",
+        "D": "Vrozené poznání"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 9,
+      "text": "Jaký druh soudů Kant považoval za klíčový pro vědu?",
+      "options": {
+        "A": "Analytické a posteriori",
+        "B": "Syntetické a priori",
+        "C": "Analytické a priori",
+        "D": "Syntetické a posteriori"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 10,
+      "text": "Co je to 'fenomen' podle Kanta?",
+      "options": {
+        "A": "Věc o sobě",
+        "B": "To, jak se nám svět jeví",
+        "C": "Rozumový princip",
+        "D": "Smyslový klam"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 11,
+      "text": "Co je to 'noumen' podle Kanta?",
+      "options": {
+        "A": "Věc o sobě, kterou nemůžeme poznat",
+        "B": "Jev, který vidíme",
+        "C": "Kategorie rozumu",
+        "D": "Smyslové poznání"
+      },
+      "correct": "A"
+    },
+    {
+      "id": 12,
+      "text": "Kolik kategorií rozumu Kant rozlišuje?",
+      "options": {
+        "A": "6",
+        "B": "8",
+        "C": "10",
+        "D": "12"
+      },
+      "correct": "D"
+    },
+    {
+      "id": 13,
+      "text": "K jakému účelu slouží podle Kanta kategorie rozumu?",
+      "options": {
+        "A": "K určování mravního zákona",
+        "B": "K uspořádání vjemů do zkušenosti",
+        "C": "K tvoření idejí",
+        "D": "K dokazování existence Boha"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 14,
+      "text": "Které dvě formy vnímání jsou podle Kanta vrozené?",
+      "options": {
+        "A": "Prostor a čas",
+        "B": "Pohyb a klid",
+        "C": "Barva a tvar",
+        "D": "Rozum a smysl"
+      },
+      "correct": "A"
+    },
+    {
+      "id": 15,
+      "text": "Které dílo je zaměřeno na Kantovu teorii poznání?",
+      "options": {
+        "A": "Kritika praktického rozumu",
+        "B": "Kritika soudnosti",
+        "C": "Kritika čistého rozumu",
+        "D": "Základy metafyziky mravů"
+      },
+      "correct": "C"
+    },
+    {
+      "id": 16,
+      "text": "Jak se jmenuje Kantův hlavní etický princip?",
+      "options": {
+        "A": "Morální postulát",
+        "B": "Kategorický imperativ",
+        "C": "Mravní zákon",
+        "D": "Rozumová vůle"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 17,
+      "text": "Jak zní základní formulace kategorického imperativu?",
+      "options": {
+        "A": "Jednej podle svých emocí",
+        "B": "Jednej tak, aby tvé jednání bylo užitečné",
+        "C": "Jednej tak, aby maxima tvé vůle mohla být univerzálním zákonem",
+        "D": "Jednej podle pravidel společnosti"
+      },
+      "correct": "C"
+    },
+    {
+      "id": 18,
+      "text": "Na čem podle Kanta nezáleží při morálním hodnocení činu?",
+      "options": {
+        "A": "Na vůli",
+        "B": "Na výsledku",
+        "C": "Na úmyslu",
+        "D": "Na povinnosti"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 19,
+      "text": "Co je podle Kanta skutečná svoboda?",
+      "options": {
+        "A": "Možnost dělat cokoli chci",
+        "B": "Poslušnost rozumu a mravnímu zákonu",
+        "C": "Osvobození od morálky",
+        "D": "Přijetí náboženské víry"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 20,
+      "text": "Jaký vztah má Kant k náboženství?",
+      "options": {
+        "A": "Odmítá je zcela",
+        "B": "Považuje je za iracionální",
+        "C": "Chce ho podřídit rozumu",
+        "D": "Považuje víru za vědeckou jistotu"
+      },
+      "correct": "C"
+    },
+    {
+      "id": 21,
+      "text": "Jak Kant označuje Boha, svobodu a nesmrtelnost duše?",
+      "options": {
+        "A": "Metafyzické ideje",
+        "B": "Smyslové kategorie",
+        "C": "Morální konstrukty",
+        "D": "Praktické postuláty rozumu"
+      },
+      "correct": "D"
+    },
+    {
+      "id": 22,
+      "text": "Co je cílem mravního jednání podle Kanta?",
+      "options": {
+        "A": "Štěstí",
+        "B": "Užitečnost",
+        "C": "Povinnost",
+        "D": "Zisk"
+      },
+      "correct": "C"
+    },
+    {
+      "id": 23,
+      "text": "Který pojem vyjadřuje Kantovo přesvědčení, že člověk má být sám sobě zákonodárcem?",
+      "options": {
+        "A": "Autonomie vůle",
+        "B": "Morální dualismus",
+        "C": "Subjektivní etika",
+        "D": "Determinismus"
+      },
+      "correct": "A"
+    },
+    {
+      "id": 24,
+      "text": "Jak Kant chápe pojem 'povinnost'?",
+      "options": {
+        "A": "Jako vnější nátlak společnosti",
+        "B": "Jako poslušnost Bohu",
+        "C": "Jako vnitřní zákon rozumu",
+        "D": "Jako zvyk"
+      },
+      "correct": "C"
+    },
+    {
+      "id": 25,
+      "text": "Co podle Kanta činí čin morálním?",
+      "options": {
+        "A": "Jeho výsledek",
+        "B": "Úmysl jednat z povinnosti",
+        "C": "Souhlas ostatních",
+        "D": "Shoda s církevním učením"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 26,
+      "text": "Jak Kant rozlišuje svět, který vnímáme?",
+      "options": {
+        "A": "Na empirický a metafyzický",
+        "B": "Na fenomenální a noumenální",
+        "C": "Na objektivní a subjektivní",
+        "D": "Na skutečný a pomyslný"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 27,
+      "text": "Které dílo se věnuje Kantově etice?",
+      "options": {
+        "A": "Kritika praktického rozumu",
+        "B": "Kritika soudnosti",
+        "C": "Kritika čistého rozumu",
+        "D": "Metafyzika přírody"
+      },
+      "correct": "A"
+    },
+    {
+      "id": 28,
+      "text": "Jak Kant definuje krásu?",
+      "options": {
+        "A": "Jako vlastnost věcí",
+        "B": "Jako užitečnost",
+        "C": "Jako nezaujaté zalíbení",
+        "D": "Jako morální hodnotu"
+      },
+      "correct": "C"
+    },
+    {
+      "id": 29,
+      "text": "Které Kantovo dílo se zabývá estetikou?",
+      "options": {
+        "A": "Kritika praktického rozumu",
+        "B": "Kritika soudnosti",
+        "C": "Kritika čistého rozumu",
+        "D": "Prolegomena"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 30,
+      "text": "Jaký vztah má Kant mezi rozumem a zkušeností?",
+      "options": {
+        "A": "Rozum tvoří zkušenost",
+        "B": "Zkušenost tvoří rozum",
+        "C": "Jsou nezávislé",
+        "D": "Jsou v rozporu"
+      },
+      "correct": "A"
+    },
+    {
+      "id": 31,
+      "text": "Kdo z filozofů byl Kantovým hlavním oponentem v otázce empirismu?",
+      "options": {
+        "A": "John Locke",
+        "B": "David Hume",
+        "C": "René Descartes",
+        "D": "Francis Bacon"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 32,
+      "text": "Co podle Kanta umožňuje vědecké poznání?",
+      "options": {
+        "A": "Syntetické soudy a posteriori",
+        "B": "Syntetické soudy a priori",
+        "C": "Analytické soudy",
+        "D": "Intuice bez zkušenosti"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 33,
+      "text": "Kdo byl ovlivněn Kantovou filozofií?",
+      "options": {
+        "A": "Hegel",
+        "B": "Nietzsche",
+        "C": "Heidegger",
+        "D": "Všichni výše uvedení"
+      },
+      "correct": "D"
+    },
+    {
+      "id": 34,
+      "text": "Který pojem vyjadřuje Kantovo přesvědčení o aktivní roli rozumu v poznání?",
+      "options": {
+        "A": "Empirická senzitivita",
+        "B": "Transcendentální idealismus",
+        "C": "Metafyzická intuice",
+        "D": "Racionální dualismus"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 35,
+      "text": "Jak Kant rozlišuje analytické a syntetické soudy?",
+      "options": {
+        "A": "Analytické rozšiřují poznání, syntetické jen vysvětlují",
+        "B": "Analytické vysvětlují, syntetické rozšiřují poznání",
+        "C": "Analytické jsou zkušenostní, syntetické vrozené",
+        "D": "Žádný rozdíl neexistuje"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 36,
+      "text": "Jaký je vztah mezi smysly a rozumem podle Kanta?",
+      "options": {
+        "A": "Rozum bez smyslů je prázdný, smysly bez rozumu slepé",
+        "B": "Rozum převažuje nad smysly",
+        "C": "Smysly převažují nad rozumem",
+        "D": "Jsou oddělené a nespolupracují"
+      },
+      "correct": "A"
+    },
+    {
+      "id": 37,
+      "text": "Jak Kant označuje svět, který poznáváme pomocí kategorií rozumu?",
+      "options": {
+        "A": "Noumenální svět",
+        "B": "Fenomenální svět",
+        "C": "Transcendentální svět",
+        "D": "Ideální svět"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 38,
+      "text": "Co znamená Kantovo pojetí autonomie?",
+      "options": {
+        "A": "Závislost na společnosti",
+        "B": "Sebeurčení rozumem",
+        "C": "Podřízenost církvi",
+        "D": "Svoboda od zákonů"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 39,
+      "text": "Jak Kant chápe morální zákon?",
+      "options": {
+        "A": "Jako vnější příkaz autority",
+        "B": "Jako vnitřní hlas rozumu",
+        "C": "Jako kulturní tradici",
+        "D": "Jako právní normu"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 40,
+      "text": "Který citát pochází od Kanta?",
+      "options": {
+        "A": "Myslím, tedy jsem.",
+        "B": "Člověk je mírou všech věcí.",
+        "C": "Hvězdné nebe nade mnou a morální zákon ve mně.",
+        "D": "Cogito, ergo sum."
+      },
+      "correct": "C"
+    },
+    {
+      "id": 41,
+      "text": "Jak Kant chápe vztah mezi věděním a vírou?",
+      "options": {
+        "A": "Jsou v rozporu",
+        "B": "Víra doplňuje rozum tam, kde věda končí",
+        "C": "Víra je nadřazená rozumu",
+        "D": "Rozum je závislý na víře"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 42,
+      "text": "Jak Kant označuje svou filozofii poznání?",
+      "options": {
+        "A": "Transcendentální idealismus",
+        "B": "Empirický realismus",
+        "C": "Skeptický racionalismus",
+        "D": "Filozofický pozitivismus"
+      },
+      "correct": "A"
+    },
+    {
+      "id": 43,
+      "text": "Jak Kant hodnotí morálku založenou na citech?",
+      "options": {
+        "A": "Je nejvyšší formou morálky",
+        "B": "Je nedostačující a nestálá",
+        "C": "Je rovna morálce rozumu",
+        "D": "Je lepší než morálka povinnosti"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 44,
+      "text": "Jak Kant chápe cíl filozofie?",
+      "options": {
+        "A": "Hledání smyslových jistot",
+        "B": "Spojení rozumu a zkušenosti",
+        "C": "Popření poznatelnosti světa",
+        "D": "Podřízení vědy náboženství"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 45,
+      "text": "Kdo navazuje na Kantovu morální filozofii?",
+      "options": {
+        "A": "Aristoteles",
+        "B": "Hegel",
+        "C": "Sartre",
+        "D": "Bentham"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 46,
+      "text": "Jak Kant chápe vztah mezi svobodou a morálkou?",
+      "options": {
+        "A": "Jsou protikladné",
+        "B": "Svoboda je podmínkou morálky",
+        "C": "Morálka omezuje svobodu",
+        "D": "Nemají souvislost"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 47,
+      "text": "Jak Kant odlišuje náboženství od morálky?",
+      "options": {
+        "A": "Morálka je rozumová, náboženství vírou",
+        "B": "Náboženství je důležitější",
+        "C": "Obě jsou založeny na citech",
+        "D": "Nemá mezi nimi rozdíl"
+      },
+      "correct": "A"
+    },
+    {
+      "id": 48,
+      "text": "Jak Kant chápe pojem 'transcendentální'?",
+      "options": {
+        "A": "To, co přesahuje zkušenost, ale umožňuje ji",
+        "B": "Nadpřirozené jevy",
+        "C": "Mystické zkušenosti",
+        "D": "Božské zjevení"
+      },
+      "correct": "A"
+    },
+    {
+      "id": 49,
+      "text": "Jaký je vztah mezi mravním zákonem a vůlí podle Kanta?",
+      "options": {
+        "A": "Vůle se řídí mravním zákonem, pokud je svobodná",
+        "B": "Mravní zákon závisí na vůli",
+        "C": "Vůle a zákon jsou totožné",
+        "D": "Vůle je nezávislá na morálce"
+      },
+      "correct": "A"
+    },
+    {
+      "id": 50,
+      "text": "Který výrok nejlépe vystihuje Kantovu filozofii?",
+      "options": {
+        "A": "Poznáváme svět takový, jaký skutečně je.",
+        "B": "Rozum formuje naši zkušenost světa.",
+        "C": "Morálka vychází z citu a empatie.",
+        "D": "Víra je důležitější než rozum."
       },
       "correct": "B"
     }
