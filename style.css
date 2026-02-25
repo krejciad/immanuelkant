@@ -1,10 +1,10 @@
 :root {
-  --primary-color: #2a64ad;
-  --secondary-color: #4a90e2;
-  --background-color: #f0f4f7;
-  --text-color: #1a1a1a;
-  --highlight-color: #ffd700;
-  --dark-bg: #1f3d5e;
+  --primary-color: #7a5c3a;     /* hneda – hlavni barva */
+  --secondary-color: #d4b15a;   /* zlato/zluta */
+  --background-color: #f5e6c8;  /* pergamenovy ton */
+  --text-color: #2a241d;        /* mekka tmava hneda */
+  --highlight-color: #e0c676;   /* zluty akcent */
+  --dark-bg: #87b7e3;           /* nebesky modra */
 }
 
 body {
@@ -266,3 +266,4 @@ button:hover {
   font-size: 1.3em;
   font-weight: bold;
 }
+
