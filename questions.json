@@ -2,575 +2,586 @@
   "questions": [
     {
       "id": 1,
-      "text": "Kde se narodil Immanuel Kant?",
+      "text": "Z jakého latinského slova pochází původní označení 'sekta'?",
       "options": {
-        "A": "Berlín",
-        "B": "Vídeň",
-        "C": "Königsberg",
-        "D": "Lipsko"
+        "A": "Sectum (rozdělení)",
+        "B": "Sequi (následovat)",
+        "C": "Secretum (tajemství)",
+        "D": "Sacrum (posvátno)"
       },
-      "correct": "C"
+      "correct": "B"
     },
     {
       "id": 2,
-      "text": "V jakém století žil Immanuel Kant?",
+      "text": "Jaký termín dnes odborná literatura (religionistika) preferuje místo slova sekta?",
       "options": {
-        "A": "16.",
-        "B": "17.",
-        "C": "18.",
-        "D": "19."
+        "A": "Alternativní církve",
+        "B": "Paranáboženské skupiny",
+        "C": "Nová náboženská hnutí (NNH)",
+        "D": "Ezoterická společenství"
       },
       "correct": "C"
     },
     {
       "id": 3,
-      "text": "K jakému filozofickému období Kant patřil?",
+      "text": "Co je hlavním rozlišovacím znakem destruktivního kultu?",
       "options": {
-        "A": "Renesance",
-        "B": "Osvícenství",
-        "C": "Romantismus",
-        "D": "Pozitivismus"
+        "A": "Uctívání mimozemšťanů",
+        "B": "Míra kontroly nad životy členů",
+        "C": "Počet členů v organizaci",
+        "D": "Stáří náboženské tradice"
       },
       "correct": "B"
     },
     {
       "id": 4,
-      "text": "Který filozofický směr chtěl Kant spojit?",
+      "text": "Jak se nazývá počáteční fáze náboru, kdy je nováček zahrnut přehnanou pozorností a náklonností?",
       "options": {
-        "A": "Idealismus a materialismus",
-        "B": "Empirismus a racionalismus",
-        "C": "Skepticismus a dogmatismus",
-        "D": "Pragmatismus a existencialismus"
+        "A": "Spirituální grooming",
+        "B": "Dogmatický nátlak",
+        "C": "Social shadowing",
+        "D": "Love bombing"
+      },
+      "correct": "D"
+    },
+    {
+      "id": 5,
+      "text": "Která z těchto technik manipulace spočívá v odříznutí člověka od rodiny a přátel?",
+      "options": {
+        "A": "Informační embargo",
+        "B": "Sociální izolace",
+        "C": "Ekonomická závislost",
+        "D": "Spánková deprivace"
       },
       "correct": "B"
     },
     {
-      "id": 5,
-      "text": "Jak se nazývá Kantův slavný přelom ve filozofii?",
-      "options": {
-        "A": "Kritický zlom",
-        "B": "Filozofický paradox",
-        "C": "Koperníkovský obrat",
-        "D": "Racionalistický přerod"
-      },
-      "correct": "C"
-    },
-    {
       "id": 6,
-      "text": "Jaké jsou dvě základní složky poznání podle Kanta?",
+      "text": "Jaký typ lidí je podle tvých materiálů nejvíce ohrožen náborem do sekty?",
       "options": {
-        "A": "Cit a víra",
-        "B": "Rozum a zkušenost",
-        "C": "Intuice a představivost",
-        "D": "Smysly a emoce"
+        "A": "Lidé s nízkým IQ",
+        "B": "Lidé v těžkém životním období (ztráta, samota)",
+        "C": "Mladí lidé bez vzdělání",
+        "D": "Lidé z chudých poměrů"
       },
       "correct": "B"
     },
     {
       "id": 7,
-      "text": "Co znamená pojem 'a priori'?",
+      "text": "Co je typické pro postavu vůdce v sektářském prostředí?",
       "options": {
-        "A": "Poznání ze zkušenosti",
-        "B": "Poznání před zkušeností",
-        "C": "Názor na základě pocitů",
-        "D": "Empirický závěr"
+        "A": "Je demokraticky volen každé 4 roky",
+        "B": "Jeho autorita je omezena radou starších",
+        "C": "Prezentuje se jako neomylný a výjimečný",
+        "D": "Působí anonymně z pozadí"
       },
-      "correct": "B"
+      "correct": "C"
     },
     {
       "id": 8,
-      "text": "Co znamená pojem 'a posteriori'?",
+      "text": "Která skupina je známá kontroverzní doktrínou odmítání krevních transfuzí?",
       "options": {
-        "A": "Poznání nezávislé na zkušenosti",
-        "B": "Poznání ze zkušenosti",
-        "C": "Instinktivní poznání",
-        "D": "Vrozené poznání"
+        "A": "Scientologové",
+        "B": "Hnutí Grálu",
+        "C": "Svědkové Jehovovi",
+        "D": "Vesmírní lidé"
       },
-      "correct": "B"
+      "correct": "C"
     },
     {
       "id": 9,
-      "text": "Jaký druh soudů Kant považoval za klíčový pro vědu?",
+      "text": "Jak se v materiálech nazývá praxe přerušení veškerých kontaktů s vyloučeným členem?",
       "options": {
-        "A": "Analytické a posteriori",
-        "B": "Syntetické a priori",
-        "C": "Analytické a priori",
-        "D": "Syntetické a posteriori"
+        "A": "Odloučení (shunning)",
+        "B": "Exkomunikace",
+        "C": "Anatéma",
+        "D": "Čistka"
       },
-      "correct": "B"
+      "correct": "A"
     },
     {
       "id": 10,
-      "text": "Co je to 'fenomen' podle Kanta?",
+      "text": "Která organizace byla založena L. Ronem Hubbardem a využívá tzv. 'auditování'?",
       "options": {
-        "A": "Věc o sobě",
-        "B": "To, jak se nám svět jeví",
-        "C": "Rozumový princip",
-        "D": "Smyslový klam"
+        "A": "Mormoni",
+        "B": "Scientologie",
+        "C": "Svědkové Jehovovi",
+        "D": "Aum Šinrikjó"
       },
       "correct": "B"
     },
     {
       "id": 11,
-      "text": "Co je to 'noumen' podle Kanta?",
+      "text": "Kdo je zakladatelem a hlavním představitelem českého hnutí Vesmírní lidé?",
       "options": {
-        "A": "Věc o sobě, kterou nemůžeme poznat",
-        "B": "Jev, který vidíme",
-        "C": "Kategorie rozumu",
-        "D": "Smyslové poznání"
+        "A": "Jaroslav Dobeš",
+        "B": "Ivo A. Benda",
+        "C": "Abd-ru-shin",
+        "D": "Tomáš Hudec"
       },
-      "correct": "A"
+      "correct": "B"
     },
     {
       "id": 12,
-      "text": "Kolik kategorií rozumu Kant rozlišuje?",
+      "text": "V čem spočívá hlavní myšlenka Laveyovského satanismu?",
       "options": {
-        "A": "6",
-        "B": "8",
-        "C": "10",
-        "D": "12"
+        "A": "Uctívání reálné bytosti ďábla",
+        "B": "Obětování zvířat při rituálech",
+        "C": "Individuální egoismus a symbol lidské přirozenosti",
+        "D": "Snaha o svržení všech vlád světa"
       },
-      "correct": "D"
+      "correct": "C"
     },
     {
       "id": 13,
-      "text": "K jakému účelu slouží podle Kanta kategorie rozumu?",
+      "text": "Jakou techniku používal 'Guru Jára' pod záminkou duchovního očištění?",
       "options": {
-        "A": "K určování mravního zákona",
-        "B": "K uspořádání vjemů do zkušenosti",
-        "C": "K tvoření idejí",
-        "D": "K dokazování existence Boha"
+        "A": "Auditování pomocí E-metru",
+        "B": "Odháčkování (sexuální zneužívání)",
+        "C": "Spánkovou deprivaci",
+        "D": "Půst o vodě"
       },
       "correct": "B"
     },
     {
       "id": 14,
-      "text": "Které dvě formy vnímání jsou podle Kanta vrozené?",
+      "text": "Které hnutí vychází z díla 'Ve světle pravdy' od spisovatele Abd-ru-shina?",
       "options": {
-        "A": "Prostor a čas",
-        "B": "Pohyb a klid",
-        "C": "Barva a tvar",
-        "D": "Rozum a smysl"
+        "A": "Hnutí Grálu",
+        "B": "Vesmírní lidé",
+        "C": "Mormoni",
+        "D": "Křesťanská věda"
       },
       "correct": "A"
     },
     {
       "id": 15,
-      "text": "Které dílo je zaměřeno na Kantovu teorii poznání?",
+      "text": "Jak sekty často pohlížejí na kritické informace z vnějšího světa?",
       "options": {
-        "A": "Kritika praktického rozumu",
-        "B": "Kritika soudnosti",
-        "C": "Kritika čistého rozumu",
-        "D": "Základy metafyziky mravů"
+        "A": "Podporují kritické myšlení členů",
+        "B": "Považují je za lži a nástroj 'temných sil' či nepřátel",
+        "C": "Povinně je analyzují na schůzkách",
+        "D": "Ignorují je, protože na nich nezáleží"
       },
-      "correct": "C"
+      "correct": "B"
     },
     {
       "id": 16,
-      "text": "Jak se jmenuje Kantův hlavní etický princip?",
+      "text": "Co z následujícího NENÍ typickým znakem sekty podle tvé prezentace?",
       "options": {
-        "A": "Morální postulát",
-        "B": "Kategorický imperativ",
-        "C": "Mravní zákon",
-        "D": "Rozumová vůle"
+        "A": "Finanční nátlak",
+        "B": "Otevřenost vůči jiným názorům",
+        "C": "Kontrola informací",
+        "D": "Pocit výlučnosti"
       },
       "correct": "B"
     },
     {
       "id": 17,
-      "text": "Jak zní základní formulace kategorického imperativu?",
+      "text": "Jakým způsobem sekty často využívají pocit viny?",
       "options": {
-        "A": "Jednej podle svých emocí",
-        "B": "Jednej tak, aby tvé jednání bylo užitečné",
-        "C": "Jednej tak, aby maxima tvé vůle mohla být univerzálním zákonem",
-        "D": "Jednej podle pravidel společnosti"
+        "A": "K motivaci k dobročinnosti",
+        "B": "K udržení poslušnosti a znemožnění odchodu",
+        "C": "K rozvoji empatie mezi členy",
+        "D": "Vůbec ho nevyužívají, sází na pozitivní emoce"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 18,
+      "text": "Co se stane se vztahem k rodině, pokud člověk vstoupí do destruktivního kultu?",
+      "options": {
+        "A": "Rodinné vztahy jsou posíleny",
+        "B": "Sekta rodinu finančně podporuje",
+        "C": "Dochází k postupnému odcizení nebo zákazu kontaktu",
+        "D": "Člen musí rodinu povinně přivést do 30 dnů"
       },
       "correct": "C"
     },
     {
-      "id": 18,
-      "text": "Na čem podle Kanta nezáleží při morálním hodnocení činu?",
-      "options": {
-        "A": "Na vůli",
-        "B": "Na výsledku",
-        "C": "Na úmyslu",
-        "D": "Na povinnosti"
-      },
-      "correct": "B"
-    },
-    {
       "id": 19,
-      "text": "Co je podle Kanta skutečná svoboda?",
+      "text": "Která z těchto skupin věří v mimozemské civilizace (např. Aštar Šeran)?",
       "options": {
-        "A": "Možnost dělat cokoli chci",
-        "B": "Poslušnost rozumu a mravnímu zákonu",
-        "C": "Osvobození od morálky",
-        "D": "Přijetí náboženské víry"
+        "A": "Satanisté",
+        "B": "Hnutí Grálu",
+        "C": "Svědkové Jehovovi",
+        "D": "Vesmírní lidé"
       },
-      "correct": "B"
+      "correct": "D"
     },
     {
       "id": 20,
-      "text": "Jaký vztah má Kant k náboženství?",
+      "text": "Jaká je nejúčinnější prevence proti vlivu sekt?",
       "options": {
-        "A": "Odmítá je zcela",
-        "B": "Považuje je za iracionální",
-        "C": "Chce ho podřídit rozumu",
-        "D": "Považuje víru za vědeckou jistotu"
+        "A": "Zákaz všech náboženství",
+        "B": "Izolace od internetu",
+        "C": "Kritické myšlení a stabilní sociální zázemí",
+        "D": "Vstup do jiné, bezpečnější sekty"
       },
       "correct": "C"
     },
     {
       "id": 21,
-      "text": "Jak Kant označuje Boha, svobodu a nesmrtelnost duše?",
+      "text": "Co znamená pojem 'ekonomické vykořisťování' v kontextu sekt?",
       "options": {
-        "A": "Metafyzické ideje",
-        "B": "Smyslové kategorie",
-        "C": "Morální konstrukty",
-        "D": "Praktické postuláty rozumu"
+        "A": "Povinnost členů pracovat v běžném zaměstnání",
+        "B": "Odevzdávání majetku nebo vysokých poplatků organizaci",
+        "C": "Společné investování na burze",
+        "D": "Státní dotace pro církve"
       },
-      "correct": "D"
+      "correct": "B"
     },
     {
       "id": 22,
-      "text": "Co je cílem mravního jednání podle Kanta?",
+      "text": "Proč je odchod ze sekty psychicky náročný?",
       "options": {
-        "A": "Štěstí",
-        "B": "Užitečnost",
-        "C": "Povinnost",
-        "D": "Zisk"
+        "A": "Kvůli ztrátě všech sociálních vazeb a hrozbě 'zatracení'",
+        "B": "Protože sekta vyžaduje vysoké odstupné",
+        "C": "Protože bývalý člen zapomene mluvit",
+        "D": "Není náročný, sekty své členy propouštějí rády"
       },
-      "correct": "C"
+      "correct": "A"
     },
     {
       "id": 23,
-      "text": "Který pojem vyjadřuje Kantovo přesvědčení, že člověk má být sám sobě zákonodárcem?",
+      "text": "Jaký je rozdíl mezi teistickým a Laveyovským satanismem?",
       "options": {
-        "A": "Autonomie vůle",
-        "B": "Morální dualismus",
-        "C": "Subjektivní etika",
-        "D": "Determinismus"
+        "A": "Teistický věří v ďábla jako bytost, Laveyovský jako symbol",
+        "B": "Žádný rozdíl neexistuje",
+        "C": "Laveyovský satanismus je nelegální, teistický nikoliv",
+        "D": "Teistický je pro dospělé, Laveyovský pro děti"
       },
       "correct": "A"
     },
     {
       "id": 24,
-      "text": "Jak Kant chápe pojem 'povinnost'?",
+      "text": "Který z těchto znaků definuje sektu v tabulkovém srovnání s náboženstvím?",
       "options": {
-        "A": "Jako vnější nátlak společnosti",
-        "B": "Jako poslušnost Bohu",
-        "C": "Jako vnitřní zákon rozumu",
-        "D": "Jako zvyk"
+        "A": "Kritika se trestá",
+        "B": "Vedení je kontrolované",
+        "C": "Otevřenost společnosti",
+        "D": "Osobní volba víry"
       },
-      "correct": "C"
+      "correct": "A"
     },
     {
       "id": 25,
-      "text": "Co podle Kanta činí čin morálním?",
+      "text": "Co je to 'mileniarismus' (častý prvek u Svědků Jehovových nebo Vesmírných lidí)?",
       "options": {
-        "A": "Jeho výsledek",
-        "B": "Úmysl jednat z povinnosti",
-        "C": "Souhlas ostatních",
-        "D": "Shoda s církevním učením"
+        "A": "Víra v tisíciletou říši míru nebo blízký konec světa",
+        "B": "Uctívání tisíce bohů",
+        "C": "Pravidlo, že sekta nesmí mít víc než 1000 členů",
+        "D": "Oslava tisíce let od založení"
       },
-      "correct": "B"
+      "correct": "A"
     },
     {
       "id": 26,
-      "text": "Jak Kant rozlišuje svět, který vnímáme?",
+      "text": "Kdo tvoří 'Řídící sbor' u Svědků Jehovových?",
       "options": {
-        "A": "Na empirický a metafyzický",
-        "B": "Na fenomenální a noumenální",
-        "C": "Na objektivní a subjektivní",
-        "D": "Na skutečný a pomyslný"
+        "A": "Všichni pokřtění členové",
+        "B": "Malá skupina mužů v ústředí v USA",
+        "C": "Místní rady v každém městě",
+        "D": "Vláda dané země"
       },
       "correct": "B"
     },
     {
       "id": 27,
-      "text": "Které dílo se věnuje Kantově etice?",
+      "text": "Který z těchto termínů se pojí se Scientologií?",
       "options": {
-        "A": "Kritika praktického rozumu",
-        "B": "Kritika soudnosti",
-        "C": "Kritika čistého rozumu",
-        "D": "Metafyzika přírody"
+        "A": "Čipování",
+        "B": "Reaktivní mysl",
+        "C": "Ještěři z pekel",
+        "D": "Odháčkování"
       },
-      "correct": "A"
+      "correct": "B"
     },
     {
       "id": 28,
-      "text": "Jak Kant definuje krásu?",
+      "text": "Jak sekty reagují na kritické členy uvnitř skupiny?",
       "options": {
-        "A": "Jako vlastnost věcí",
-        "B": "Jako užitečnost",
-        "C": "Jako nezaujaté zalíbení",
-        "D": "Jako morální hodnotu"
+        "A": "Diskutují s nimi a mění pravidla",
+        "B": "Zesměšňují je, trestají nebo izolují",
+        "C": "Jmenují je do vedení, aby je umlčeli",
+        "D": "Ignorují je"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 29,
+      "text": "Která sekta je spojována s teroristickým útokem v tokijském metru (plyn sarin)?",
+      "options": {
+        "A": "Scientologie",
+        "B": "Svědkové Jehovovi",
+        "C": "Aum Šinrikjó",
+        "D": "Chrám lidu"
       },
       "correct": "C"
     },
     {
-      "id": 29,
-      "text": "Které Kantovo dílo se zabývá estetikou?",
+      "id": 30,
+      "text": "Jaký postoj mají Vesmírní lidé k moderním technologiím jako čipy?",
       "options": {
-        "A": "Kritika praktického rozumu",
-        "B": "Kritika soudnosti",
-        "C": "Kritika čistého rozumu",
-        "D": "Prolegomena"
+        "A": "Podporují je pro komunikaci s vesmírem",
+        "B": "Považují je za nástroj zla a ovládání lidí",
+        "C": "Samy je vyvíjejí",
+        "D": "Nemají na ně názor"
       },
       "correct": "B"
     },
     {
-      "id": 30,
-      "text": "Jaký vztah má Kant mezi rozumem a zkušeností?",
+      "id": 31,
+      "text": "Co znamená pojem 'sebemarskyrství' v kontextu Guru Járy?",
       "options": {
-        "A": "Rozum tvoří zkušenost",
-        "B": "Zkušenost tvoří rozum",
-        "C": "Jsou nezávislé",
-        "D": "Jsou v rozporu"
+        "A": "Dobrovolná chudoba",
+        "B": "Obětování se pro ostatní",
+        "C": "Zneužívání náboženských pojmů k sexuální manipulaci",
+        "D": "Výuka bojových umění"
+      },
+      "correct": "C"
+    },
+    {
+      "id": 32,
+      "text": "V jakém století vznikli Svědkové Jehovovi v USA?",
+      "options": {
+        "A": "V 17. století",
+        "B": "V 18. století",
+        "C": "V 19. století",
+        "D": "V 21. století"
+      },
+      "correct": "C"
+    },
+    {
+      "id": 33,
+      "text": "Která z těchto skupin klade extrémní důraz na hierarchii a 'stavy bytí'?",
+      "options": {
+        "A": "Scientologie",
+        "B": "Laveyovský satanismus",
+        "C": "Rodina (Děti Boží)",
+        "D": "Vesmírní lidé"
       },
       "correct": "A"
     },
     {
-      "id": 31,
-      "text": "Kdo z filozofů byl Kantovým hlavním oponentem v otázce empirismu?",
-      "options": {
-        "A": "John Locke",
-        "B": "David Hume",
-        "C": "René Descartes",
-        "D": "Francis Bacon"
-      },
-      "correct": "B"
-    },
-    {
-      "id": 32,
-      "text": "Co podle Kanta umožňuje vědecké poznání?",
-      "options": {
-        "A": "Syntetické soudy a posteriori",
-        "B": "Syntetické soudy a priori",
-        "C": "Analytické soudy",
-        "D": "Intuice bez zkušenosti"
-      },
-      "correct": "B"
-    },
-    {
-      "id": 33,
-      "text": "Kdo byl ovlivněn Kantovou filozofií?",
-      "options": {
-        "A": "Hegel",
-        "B": "Nietzsche",
-        "C": "Heidegger",
-        "D": "Všichni výše uvedení"
-      },
-      "correct": "D"
-    },
-    {
       "id": 34,
-      "text": "Který pojem vyjadřuje Kantovo přesvědčení o aktivní roli rozumu v poznání?",
+      "text": "Co je hlavním cílem náborových technik jako 'stresové testy'?",
       "options": {
-        "A": "Empirická senzitivita",
-        "B": "Transcendentální idealismus",
-        "C": "Metafyzická intuice",
-        "D": "Racionální dualismus"
+        "A": "Zvýšení odolnosti nováčka",
+        "B": "Odhalení psychických slabin pro budoucí manipulaci",
+        "C": "Pobavení stávajících členů",
+        "D": "Výběr nejinteligentnějších kandidátů"
       },
       "correct": "B"
     },
     {
       "id": 35,
-      "text": "Jak Kant rozlišuje analytické a syntetické soudy?",
+      "text": "Který z pojmů označuje absolutní poslušnost vůči vůdci?",
       "options": {
-        "A": "Analytické rozšiřují poznání, syntetické jen vysvětlují",
-        "B": "Analytické vysvětlují, syntetické rozšiřují poznání",
-        "C": "Analytické jsou zkušenostní, syntetické vrozené",
-        "D": "Žádný rozdíl neexistuje"
-      },
-      "correct": "B"
-    },
-    {
-      "id": 36,
-      "text": "Jaký je vztah mezi smysly a rozumem podle Kanta?",
-      "options": {
-        "A": "Rozum bez smyslů je prázdný, smysly bez rozumu slepé",
-        "B": "Rozum převažuje nad smysly",
-        "C": "Smysly převažují nad rozumem",
-        "D": "Jsou oddělené a nespolupracují"
+        "A": "Charismatická autorita",
+        "B": "Demokratický centralismus",
+        "C": "Duchovní asertivita",
+        "D": "Kolektivní inteligence"
       },
       "correct": "A"
     },
     {
-      "id": 37,
-      "text": "Jak Kant označuje svět, který poznáváme pomocí kategorií rozumu?",
+      "id": 36,
+      "text": "Jak se jmenuje kniha, kterou napsal Anton LaVey?",
       "options": {
-        "A": "Noumenální svět",
-        "B": "Fenomenální svět",
-        "C": "Transcendentální svět",
-        "D": "Ideální svět"
+        "A": "Strážná věž",
+        "B": "Satanistická bible",
+        "C": "Dianetika",
+        "D": "Vesmírné poselství"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 37,
+      "text": "Proč sekty často slibují 'jednoduché odpovědi'?",
+      "options": {
+        "A": "Protože svět je skutečně velmi jednoduchý",
+        "B": "Protože to přitahuje lidi zmatené složitostí světa",
+        "C": "Aby ušetřily čas při výuce",
+        "D": "Není to pravda, sekty slibují složité studium"
       },
       "correct": "B"
     },
     {
       "id": 38,
-      "text": "Co znamená Kantovo pojetí autonomie?",
+      "text": "Který z těchto znaků je v materiálech označen jako 'rizikový'?",
       "options": {
-        "A": "Závislost na společnosti",
-        "B": "Sebeurčení rozumem",
-        "C": "Podřízenost církvi",
-        "D": "Svoboda od zákonů"
+        "A": "Placení členských příspěvků",
+        "B": "Zákaz kritického dotazování",
+        "C": "Společné modlitby",
+        "D": "Nošení náboženských symbolů"
       },
       "correct": "B"
     },
     {
       "id": 39,
-      "text": "Jak Kant chápe morální zákon?",
+      "text": "Jaká je role 'odborníků' (např. psychologů) při pomoci obětem sekt?",
       "options": {
-        "A": "Jako vnější příkaz autority",
-        "B": "Jako vnitřní hlas rozumu",
-        "C": "Jako kulturní tradici",
-        "D": "Jako právní normu"
-      },
-      "correct": "B"
-    },
-    {
-      "id": 40,
-      "text": "Který citát pochází od Kanta?",
-      "options": {
-        "A": "Myslím, tedy jsem.",
-        "B": "Člověk je mírou všech věcí.",
-        "C": "Hvězdné nebe nade mnou a morální zákon ve mně.",
-        "D": "Cogito, ergo sum."
-      },
-      "correct": "C"
-    },
-    {
-      "id": 41,
-      "text": "Jak Kant chápe vztah mezi věděním a vírou?",
-      "options": {
-        "A": "Jsou v rozporu",
-        "B": "Víra doplňuje rozum tam, kde věda končí",
-        "C": "Víra je nadřazená rozumu",
-        "D": "Rozum je závislý na víře"
-      },
-      "correct": "B"
-    },
-    {
-      "id": 42,
-      "text": "Jak Kant označuje svou filozofii poznání?",
-      "options": {
-        "A": "Transcendentální idealismus",
-        "B": "Empirický realismus",
-        "C": "Skeptický racionalismus",
-        "D": "Filozofický pozitivismus"
+        "A": "Provádět deprogramování a psychoterapii",
+        "B": "Nahlásit oběť policii",
+        "C": "Přemluvit oběť k návratu do sekty",
+        "D": "Psychologové v této oblasti nepomáhají"
       },
       "correct": "A"
     },
     {
-      "id": 43,
-      "text": "Jak Kant hodnotí morálku založenou na citech?",
+      "id": 40,
+      "text": "Jakou barvu oblečení (podle obrázků v prezentaci) často používají Vesmírní lidé?",
       "options": {
-        "A": "Je nejvyšší formou morálky",
-        "B": "Je nedostačující a nestálá",
-        "C": "Je rovna morálce rozumu",
-        "D": "Je lepší než morálka povinnosti"
+        "A": "Černou",
+        "B": "Bílou a světlé barvy",
+        "C": "Krvavě červenou",
+        "D": "Maskáčovou"
       },
       "correct": "B"
     },
     {
-      "id": 44,
-      "text": "Jak Kant chápe cíl filozofie?",
+      "id": 41,
+      "text": "Který pojem označuje pocit, že členové sekty jsou 'nadlidé' nebo vyvolení?",
       "options": {
-        "A": "Hledání smyslových jistot",
-        "B": "Spojení rozumu a zkušenosti",
-        "C": "Popření poznatelnosti světa",
-        "D": "Podřízení vědy náboženství"
+        "A": "Inkluze",
+        "B": "Egalitářství",
+        "C": "Exkluzivita (výlučnost)",
+        "D": "Altruismus"
+      },
+      "correct": "C"
+    },
+    {
+      "id": 42,
+      "text": "Co se v dokumentech píše o inteligenci obětí sekt?",
+      "options": {
+        "A": "Obětí se stávají jen hloupí lidé",
+        "B": "Vysoký intelekt nechrání před emoční manipulací",
+        "C": "Sekty vyhledávají jen lidi s titulem Ph.D.",
+        "D": "Inteligence je pro vstup do sekty klíčová"
+      },
+      "correct": "B"
+    },
+    {
+      "id": 43,
+      "text": "Jak se nazývá hlavní časopis Svědků Jehovových?",
+      "options": {
+        "A": "Probuďte se!",
+        "B": "Scientia",
+        "C": "Vesmírné listy",
+        "D": "Satanův hlas"
+      },
+      "correct": "A"
+    },
+    {
+      "id": 44,
+      "text": "Který z těchto směrů je označen za 'sekulární filozofii'?",
+      "options": {
+        "A": "Mormonismus",
+        "B": "Laveyovský satanismus",
+        "C": "Hnutí Grálu",
+        "D": "Aum Šinrikjó"
       },
       "correct": "B"
     },
     {
       "id": 45,
-      "text": "Kdo navazuje na Kantovu morální filozofii?",
+      "text": "Co je to 'E-metr'?",
       "options": {
-        "A": "Aristoteles",
-        "B": "Hegel",
-        "C": "Sartre",
-        "D": "Bentham"
+        "A": "Zařízení na měření radiace",
+        "B": "Přístroj používaný v Scientologii při auditování",
+        "C": "Vesmírný komunikační přístroj Iva Bendy",
+        "D": "Měřič hladiny stresu u satanistů"
       },
       "correct": "B"
     },
     {
       "id": 46,
-      "text": "Jak Kant chápe vztah mezi svobodou a morálkou?",
+      "text": "Který z těchto znaků v tabulce patří k 'Náboženství'?",
       "options": {
-        "A": "Jsou protikladné",
-        "B": "Svoboda je podmínkou morálky",
-        "C": "Morálka omezuje svobodu",
-        "D": "Nemají souvislost"
+        "A": "Rodiny se často rozdělují",
+        "B": "Vůdce má absolutní autoritu",
+        "C": "Rodinné vztahy jsou podporovány",
+        "D": "Kritika se trestá"
       },
-      "correct": "B"
+      "correct": "C"
     },
     {
       "id": 47,
-      "text": "Jak Kant odlišuje náboženství od morálky?",
+      "text": "Jaké nebezpečí hrozí dětem v sektách s doktrínou odmítání krve?",
       "options": {
-        "A": "Morálka je rozumová, náboženství vírou",
-        "B": "Náboženství je důležitější",
-        "C": "Obě jsou založeny na citech",
-        "D": "Nemá mezi nimi rozdíl"
+        "A": "Ohrožení života při nutných operacích",
+        "B": "Nedostatek vitamínů",
+        "C": "Zákaz chození do školy",
+        "D": "Příliš rychlý růst"
       },
       "correct": "A"
     },
     {
       "id": 48,
-      "text": "Jak Kant chápe pojem 'transcendentální'?",
+      "text": "Kdo je autorem knihy 'Dianetika'?",
       "options": {
-        "A": "To, co přesahuje zkušenost, ale umožňuje ji",
-        "B": "Nadpřirozené jevy",
-        "C": "Mystické zkušenosti",
-        "D": "Božské zjevení"
+        "A": "Ivo A. Benda",
+        "B": "L. Ron Hubbard",
+        "C": "Anton LaVey",
+        "D": "Guru Jára"
       },
-      "correct": "A"
+      "correct": "B"
     },
     {
       "id": 49,
-      "text": "Jaký je vztah mezi mravním zákonem a vůlí podle Kanta?",
+      "text": "Co slibují Vesmírní lidé svým věrným stoupencům?",
       "options": {
-        "A": "Vůle se řídí mravním zákonem, pokud je svobodná",
-        "B": "Mravní zákon závisí na vůli",
-        "C": "Vůle a zákon jsou totožné",
-        "D": "Vůle je nezávislá na morálce"
+        "A": "Věčné bohatství na Zemi",
+        "B": "Evakuaci vesmírnými loděmi před katastrofou",
+        "C": "Vládní posty v ČR",
+        "D": "Nesmrtelnost těla"
       },
-      "correct": "A"
+      "correct": "B"
     },
     {
       "id": 50,
-      "text": "Který výrok nejlépe vystihuje Kantovu filozofii?",
+      "text": "Jak bys popsal 'informační kontrolu' v sektě?",
       "options": {
-        "A": "Poznáváme svět takový, jaký skutečně je.",
-        "B": "Rozum formuje naši zkušenost světa.",
-        "C": "Morálka vychází z citu a empatie.",
-        "D": "Víra je důležitější než rozum."
+        "A": "Povinné sledování televizních novin",
+        "B": "Zákaz čtení literatury, která kritizuje skupinu",
+        "C": "Volný přístup ke všem archivům organizace",
+        "D": "Pravidelné testy z obecného přehledu"
       },
       "correct": "B"
     },
     {
       "id": 51,
-      "text": "Patří Erik do vězení?",
+      "text": "Co je nejvýznamější událost roku 2026?",
       "options": {
-        "A": "Ano, určitě!",
-        "B": "Ne.",
-        "C": "Možná.",
-        "D": "Kebab."
+        "A": "Sprcha na hřbitově",
+        "B": "Invaze mimozemšťanů",
+        "C": "Shallow pro Magdu",
+        "D": "Ti co ví..."
+      },
+      "correct": "C"
+    },
+    {
+      "id": 52,
+      "text": "Kdy občanovi z adresy Kojetice 195 skončila první živnost?",
+      "options": {
+        "A": "1. 1. 2005",
+        "B": "31. 2. 2019",
+        "C": "11. 3. 2002",
+        "D": "30. 6. 2008"
       },
       "correct": "D"
     },
     {
-      "id": 52,
-      "text": "Proč je chudoba hrozbou?",
+      "id": 53,
+      "text": "🙈🙈🙈🙈",
       "options": {
-        "A": "100% fluffy hair.",
-        "B": "Bořek stavitel.",
-        "C": "Neustále roste.",
-        "D": "Tung tung tung sahur."
+        "A": "Autem po Švýcarsku a Itálii, srpen 2024",
+        "B": "Toulání po Rakousku - jen tak autem",
+        "C": "Rakousko jen tak červenec 2023",
+        "D": "Chorvatsko 2022"
       },
-      "correct": "C"
+      "correct": "A"
     }
   ]
 }
