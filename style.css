@@ -1,10 +1,10 @@
 :root {
-  --primary-color: #7a5c3a;
-  --secondary-color: #7a5c3a;
+  --primary-color: #54391b;
+  --secondary-color: #594003;
   --background-color: #f5e6c8;
-  --text-color: #2a241d;
-  --highlight-color: #e0c676;
-  --dark-bg: #87b7f3;
+  --text-color: #382f26;
+  --highlight-color: #896909;
+  --dark-bg: #548dd3;
 }
 
 body {
@@ -266,5 +266,6 @@ button:hover {
   font-size: 1.3em;
   font-weight: bold;
 }
+
 
 
