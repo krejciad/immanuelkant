@@ -4,7 +4,7 @@
   --background-color: #f5e6c8;
   --text-color: #382f26;
   --highlight-color: #896909;
-  --dark-bg: #548dd3;
+  --dark-bg: #14427a;
 }
 
 body {
@@ -58,7 +58,7 @@ body {
 .balance {
   font-size: 1.2em;
   font-weight: bold;
-  color: var(--highlight-color);
+  color: white;
 }
 
 .start-container,
@@ -266,6 +266,7 @@ button:hover {
   font-size: 1.3em;
   font-weight: bold;
 }
+
 
 
 
